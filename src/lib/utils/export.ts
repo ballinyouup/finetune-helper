@@ -1,23 +1,32 @@
 import type { Conversation } from "$lib/stores/output";
 
-export function dataToCsv(data: { messages: Conversation[]; }): string {
+function dataToCsv(data: { messages: Conversation[]; }): string {
     const csvRows: string[] = [];
+    const rowTitles = ['system', 'user', 'assistant'] as const;
+    csvRows.push(rowTitles.join(','));
 
-    // Headers
-    const headers: string[] = Object.keys(data.messages[0]);
-    csvRows.push(headers.join(','));
-
-    // Loop over the array of messages to create rows
     for (const message of data.messages) {
-        const values = headers.map(header => message[header]);
+        const values = rowTitles.map(header => message[header]);
         csvRows.push(values.join(','));
     }
 
     return csvRows.join('\n');
 }
 
-export function downloadCsv(data: string, fileName: string = 'export.csv') {
-    const blob = new Blob([data], { type: 'text/csv' });
+type MimeTypes = "application/json" | "text/csv";
+
+function downloadFile(data: string | object, fileName: string, mimeType: MimeTypes) {
+    let processedData: string;
+    
+    if (mimeType === "application/json") {
+        processedData = JSON.stringify(data);
+    } else if (typeof data === "string") {
+        processedData = data;
+    } else {
+        throw new Error("Invalid data format");
+    }
+    
+    const blob = new Blob([processedData], { type: mimeType });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
@@ -28,14 +37,22 @@ export function downloadCsv(data: string, fileName: string = 'export.csv') {
     document.body.removeChild(a);
 }
 
-export function downloadJSON(data: object, fileName: string = 'data.json') {
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.setAttribute('hidden', '');
-    a.setAttribute('href', url);
-    a.setAttribute('download', fileName);
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+export function exportCSV(output: Conversation[]) {
+    downloadFile(
+        dataToCsv({
+            messages: output
+        }),
+        'data.csv',
+        'text/csv'
+    );
+}
+
+export function exportJSON(output: Conversation[]) {
+    downloadFile(
+        {
+            messages: output
+        },
+        'data.json',
+        'application/json'
+    );
 }
