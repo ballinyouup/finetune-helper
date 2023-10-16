@@ -23,20 +23,10 @@ function dataToCsv(data: Completion[]): string {
 }
 
 
-type MimeTypes = "application/json" | "text/csv";
+type MimeTypes = 'text/plain' | "text/csv";
 
-function downloadFile(data: string | object, fileName: string, mimeType: MimeTypes) {
-    let processedData: string;
-
-    if (mimeType === "application/json") {
-        processedData = JSON.stringify(data);
-    } else if (typeof data === "string") {
-        processedData = data;
-    } else {
-        throw new Error("Invalid data format");
-    }
-
-    const blob = new Blob([processedData], { type: mimeType });
+function downloadFile(data: string, fileName: string, mimeType: MimeTypes) {
+    const blob = new Blob([data], { type: mimeType });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.setAttribute('hidden', '');
@@ -47,6 +37,7 @@ function downloadFile(data: string | object, fileName: string, mimeType: MimeTyp
     document.body.removeChild(a);
 }
 
+
 export function exportCSV(output: Completion[]) {
     downloadFile(
         dataToCsv(output),
@@ -56,19 +47,19 @@ export function exportCSV(output: Completion[]) {
 }
 
 // Helper function to serialize the Completion array
-export function serializeCompletionArray(output: Completion[], pretty: boolean = false): string {
-    return output.map(obj => {
-        if (!pretty) {
-            return JSON.stringify({ messages: obj.messages });
-        } else {
-            return JSON.stringify({ messages: obj.messages }, null, 2);
-        }
-    }).join("\n");
+export function serializeCompletionArray(output: Completion[], pretty = false): string {
+    if (pretty) {
+        return output.map(obj => JSON.stringify({ messages: obj.messages }, null, 2)).join("\n");
+    } else {
+        return output.map(obj => JSON.stringify({ messages: obj.messages })).join("\n");
+    }
 }
 
-// Updated exportJSON function
-export function exportJSON(output: Completion[]) {
-    downloadFile(JSON.parse(serializeCompletionArray(output)), 'data.json', 'application/json');
+export function exportJSONL(output: Completion[]) {
+    let data = serializeCompletionArray(output, false);
+    downloadFile(data, 'data.jsonl', 'text/plain');
 }
+
+
 
 
