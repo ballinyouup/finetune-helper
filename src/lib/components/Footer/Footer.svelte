@@ -8,8 +8,8 @@
 	import { FooterData } from './FooterData';
 </script>
 
-<footer class="text-white">
-	<div class="mx-auto w-full max-w-7xl px-5 py-12 md:px-10 md:py-16 lg:py-20">
+<footer class="text-white h-full">
+	<div class="mx-auto w-full max-w-7xl px-5 py-12">
 		<div class="grid grid-cols-2 justify-between gap-8 sm:grid-cols-3 lg:grid-cols-4">
 			{#each FooterData as data}
 				<FooterSection title={data.title}>

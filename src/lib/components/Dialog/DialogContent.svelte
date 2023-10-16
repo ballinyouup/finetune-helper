@@ -7,19 +7,41 @@
 	export let title: ReturnType<typeof createDialog>['elements']['title'];
 	export let description: ReturnType<typeof createDialog>['elements']['description'];
 	export let close: ReturnType<typeof createDialog>['elements']['close'];
-	import { output } from '$lib/stores/output';
-	let conversation = {
-		system: '',
-		user: '',
-		assistant: ''
+	import { output, type Completion } from '$lib/stores/output';
+	let completion: Completion = {
+		messages: [
+			{
+				role: 'system',
+				content: ''
+			},
+			{
+				role: 'user',
+				content: ''
+			},
+			{
+				role: 'assistant',
+				content: ''
+			}
+		]
 	};
-	function addConversation() {
-		output.update((prev) => prev.concat([conversation]));
-		// Resetting the conversation
-		conversation = {
-			system: '',
-			user: '',
-			assistant: ''
+	function addCompletion() {
+		output.update((prev) => prev.concat([completion]));
+		// Resetting the completion
+		completion = {
+			messages: [
+				{
+					role: 'system',
+					content: ''
+				},
+				{
+					role: 'user',
+					content: ''
+				},
+				{
+					role: 'assistant',
+					content: ''
+				}
+			]
 		};
 	}
 </script>
@@ -44,7 +66,7 @@
 		<textarea
 			class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
 			id="system"
-			bind:value={conversation.system}
+			bind:value={completion.messages[0].content}
 			maxlength="2000"
 			placeholder="Enter System Prompt..."
 		/>
@@ -55,7 +77,7 @@
 			class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
 			id="user"
 			maxlength="2000"
-			bind:value={conversation.user}
+			bind:value={completion.messages[1].content}
 			placeholder="Enter User Prompt..."
 		/>
 	</fieldset>
@@ -65,14 +87,14 @@
 			class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
 			id="assistant"
 			placeholder="Enter Assistant Prompt..."
-			bind:value={conversation.assistant}
+			bind:value={completion.messages[2].content}
 			maxlength="4000"
 		/>
 	</fieldset>
 	<div class="mt-6 flex justify-end gap-4">
 		<DialogButton
 			{close}
-			on:click={() => addConversation()}
+			on:click={() => addCompletion()}
 			className="inline-flex h-8 items-center justify-center rounded-lg hover:bg-secondary px-4 font-medium leading-none text-white border border-white/20 transition duration-150"
 		>
 			Save changes

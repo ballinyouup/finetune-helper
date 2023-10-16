@@ -1,8 +1,9 @@
 import { writable, type Writable } from "svelte/store";
-export interface Conversation {
-    system: string;
-    user: string;
-    assistant: string;
+export interface Completion {
+    messages: {
+        role: "system" | "user" | "assistant";
+        content: string;
+    }[];
 }
 // Where we store the json output
-export const output: Writable<Conversation[]> = writable([]);
+export const output: Writable<Completion[]> = writable([]);

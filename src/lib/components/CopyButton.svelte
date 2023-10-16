@@ -1,17 +1,14 @@
 <script lang="ts">
-    import { blur } from "svelte/transition";
-    import copy from "copy-text-to-clipboard";
-    import { output } from "$lib/stores/output";
-    import { Check, Copy } from "lucide-svelte";
+	import { blur } from 'svelte/transition';
+	import copy from 'copy-text-to-clipboard';
+	import { output } from '$lib/stores/output';
+	import { Check, Copy } from 'lucide-svelte';
+	import { serializeCompletionArray } from '$lib/utils/export';
 	export let copied: boolean = false;
-    async function copyClick() {
+	async function copyClick() {
 		if (copied === false) {
 			copied = !copied;
-			copy(
-				JSON.stringify({
-					messages: $output
-				})
-			);
+			copy(serializeCompletionArray($output));
 		} else {
 			copied = !copied;
 		}

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Conversation } from '$lib/stores/output';
-	export let output: Conversation[];
+	import type { Completion } from '$lib/stores/output';
+	export let output: Completion[];
 	import Checkbox from '../Checkbox.svelte';
 	export let checked: boolean[];
 	export let allChecked: boolean;
@@ -22,13 +22,13 @@
 			<Checkbox bind:checked={checked[index]} />
 		</div>
 		<div class="px-4 py-4 bg-primary border-b border-muted overflow-scroll col-span-4">
-			{row.system}
+			{row.messages[0].content}
 		</div>
 		<div class="px-4 py-4 bg-primary border-b border-muted overflow-scroll col-span-4">
-			{row.user}
+			{row.messages[1].content}
 		</div>
 		<div class="px-4 py-4 bg-primary border-b border-muted overflow-scroll col-span-4">
-			{row.assistant}
+			{row.messages[2].content}
 		</div>
 	{/each}
 </div>
