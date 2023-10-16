@@ -5,6 +5,8 @@
 	import DialogContent from './DialogContent.svelte';
 	import { createDialog } from '@melt-ui/svelte';
 	import { Plus } from 'lucide-svelte';
+	import type { Completion } from '$lib/stores/output';
+	export let completions: Completion[] = []
 	const {
 		elements: { trigger, overlay, content, title, description, close, portalled },
 		states: { open }
@@ -18,5 +20,5 @@
 >
 <DialogContainer {portalled} {open}>
 	<DialogOverlay {overlay} />
-	<DialogContent {content} {close} {title} {description} />
+	<DialogContent bind:completions {content} {close} {title} {description} />
 </DialogContainer>

@@ -7,7 +7,9 @@
 	export let title: ReturnType<typeof createDialog>['elements']['title'];
 	export let description: ReturnType<typeof createDialog>['elements']['description'];
 	export let close: ReturnType<typeof createDialog>['elements']['close'];
-	import { output, type Completion } from '$lib/stores/output';
+	import type { Completion } from '$lib/stores/output';
+	import { db } from '$lib/database/database';
+	export let completions: Completion[] = [];
 	let completion: Completion = {
 		messages: [
 			{
@@ -22,10 +24,12 @@
 				role: 'assistant',
 				content: ''
 			}
-		]
+		],
+		id: completions.length + 1
 	};
 	function addCompletion() {
-		output.update((prev) => prev.concat([completion]));
+		db.table('completions').add(completion);
+		completions = [...completions, completion];
 		// Resetting the completion
 		completion = {
 			messages: [
@@ -41,7 +45,8 @@
 					role: 'assistant',
 					content: ''
 				}
-			]
+			],
+			id: completions.length + 1
 		};
 	}
 </script>

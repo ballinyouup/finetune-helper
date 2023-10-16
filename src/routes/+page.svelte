@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { output } from '$lib/stores/output';
+	import type { Completion } from '$lib/stores/output';
 	import Highlight, { LineNumbers } from 'svelte-highlight';
 	import json from 'svelte-highlight/languages/json';
 	import base16IrBlack from 'svelte-highlight/styles/base16-ir-black';
@@ -8,30 +8,46 @@
 	import CopyButton from '$lib/components/CopyButton.svelte';
 	import TableButtons from '$lib/components/Table/TableButtons.svelte';
 	import { serializeCompletionArray } from '$lib/utils/export';
+	import { onMount } from 'svelte';
+	import { db } from '$lib/database/database';
+	export let loading = false
 	let code = '';
 	let tabOpen = false;
 	let checked: boolean[] = [];
 	let allChecked = false;
 	let prettify = false;
-	$: code = serializeCompletionArray($output, prettify)
+	let completions: Completion[] = [];
+	$: code = serializeCompletionArray(completions, prettify);
 
 	$: {
 		if (allChecked) {
-			checked = Array($output.length).fill(true);
+			checked = Array(completions.length).fill(true);
 		} else {
 			allChecked = false;
 		}
 	}
-	function deleteCheckedItems() {
-		let newOutput = [];
-		for (let index = 0; index < $output.length; index++) {
-			if (!checked[index]) {
-				newOutput.push($output[index]);
+	async function deleteCheckedItems() {
+		const deletePromises = completions.map((completion, index) => {
+			if (checked[index]) {
+				return db.table('completions').delete(completion.id);
 			}
-		}
-		output.set(newOutput);
-		checked = Array(newOutput.length).fill(false);
+			return Promise.resolve();
+		});
+
+		await Promise.all(deletePromises);
+		await getStore();
+		allChecked = false;
+		checked = Array(completions.length).fill(false);
 	}
+	export async function getStore() {
+		completions = await db.table('completions').toArray();
+	}
+
+	onMount(async () => {
+		loading = true
+		await getStore();
+		loading = false
+	});
 </script>
 
 <svelte:head>
@@ -65,15 +81,15 @@
 					<Highlight language={json} {code} let:highlighted>
 						<div class="w-full bg-primary p-2.5">
 							<span>JSON</span>
-							<CopyButton />
+							<CopyButton {completions} />
 						</div>
 						<LineNumbers {highlighted} hideBorder />
 					</Highlight>
 				</div>
 			</div>
 		{:else}
-			<TableButtons {deleteCheckedItems} output={$output} bind:tabOpen />
-			<Table output={$output} bind:allChecked {checked} />
+			<TableButtons {deleteCheckedItems} bind:completions bind:tabOpen />
+			<Table bind:completions bind:allChecked {checked} />
 		{/if}
 	</div>
 </div>

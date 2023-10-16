@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { blur } from 'svelte/transition';
 	import copy from 'copy-text-to-clipboard';
-	import { output } from '$lib/stores/output';
+	export let completions: Completion[] = []
 	import { Check, Copy } from 'lucide-svelte';
 	import { serializeCompletionArray } from '$lib/utils/export';
+	import type { Completion } from '$lib/stores/output';
 	export let copied: boolean = false;
 	async function copyClick() {
 		if (copied === false) {
 			copied = !copied;
-			copy(serializeCompletionArray($output));
+			copy(serializeCompletionArray(completions));
 		} else {
 			copied = !copied;
 		}
