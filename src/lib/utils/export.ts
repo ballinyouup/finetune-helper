@@ -1,26 +1,38 @@
-import type { Completion } from "$lib/stores/output";
+import type { Completion, GPT, Llama } from "$lib/stores/output";
 
 function dataToCsv(data: Completion[]): string {
     const csvRows: string[] = [];
-    const rowTitles = ['system', 'user', 'assistant'] as const;
-    csvRows.push(rowTitles.join(','));
 
-    for (const group of data) {
-        const row: { [key: string]: string; } = {};
+    if ('messages' in data[0]) {
+        const rowTitles = ['system', 'user', 'assistant'] as const;
+        csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
 
-        // Populate the row object
-        for (const message of group.messages) {
-            row[message.role] = message.content;
+        for (const group of data) {
+            const row: { [key: string]: string; } = {};
+
+            // Populate the row object
+            for (const message of (group as GPT).messages) {
+                row[message.role] = `"${message.content}"`;
+            }
+
+            // Transform the row object to an array of messages based on rowTitles
+            const values = rowTitles.map(title => row[title]);
+            csvRows.push(values.join(','));
         }
+    } else {
+        // Handle Llama type here (assuming 'prompt' and 'completion' are properties)
+        const rowTitles = ['prompt', 'completion'] as const;
+        csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
 
-        // Transform the row object to an array of messages based on rowTitles
-        const values = rowTitles.map((title) => row[title]);
-
-        csvRows.push(values.join(','));
+        for (const group of data) {
+            const values = rowTitles.map(title => `"${(group as Llama)[title]}"`);
+            csvRows.push(values.join(','));
+        }
     }
 
     return csvRows.join('\n');
 }
+
 
 
 type MimeTypes = 'text/plain' | "text/csv";
@@ -49,12 +61,23 @@ export function exportCSV(output: Completion[]) {
 // Helper function to serialize the Completion array
 export function serializeCompletionArray(output: Completion[], pretty = false): string {
     if (pretty) {
-        return output.map(obj => JSON.stringify({ messages: obj.messages }, null, 2)).join("\n");
+        return output.map((obj) => {
+            if ('messages' in obj) {
+                return JSON.stringify({ messages: obj.messages }, null, 2);
+            } else {
+                return JSON.stringify({ prompt: obj.prompt, completion: obj.completion }, null, 2);
+            }
+        }).join('\n');
     } else {
-        return output.map(obj => JSON.stringify({ messages: obj.messages })).join("\n");
+        return output.map((obj) => {
+            if ('messages' in obj) {
+                return JSON.stringify({ messages: obj.messages });
+            } else {
+                return JSON.stringify({ prompt: obj.prompt, completion: obj.completion });
+            }
+        }).join('\n');
     }
 }
-
 export function exportJSONL(output: Completion[]) {
     let data = serializeCompletionArray(output, false);
     downloadFile(data, 'data.jsonl', 'text/plain');

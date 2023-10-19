@@ -10,44 +10,51 @@
 	import type { Completion } from '$lib/stores/output';
 	import { db } from '$lib/database/database';
 	export let completions: Completion[] = [];
-	let completion: Completion = {
-		messages: [
-			{
-				role: 'system',
-				content: ''
-			},
-			{
-				role: 'user',
-				content: ''
-			},
-			{
-				role: 'assistant',
-				content: ''
-			}
-		],
-		id: completions.length + 1
-	};
+	import { isGPT, isLlama } from '$lib/stores/output';
+	import Button from '../Button.svelte';
+	type Mode = 'GPT' | 'Llama';
+	let completion: Completion = initCompletion(
+		isGPT(completions[completions.length - 1])
+			? 'GPT'
+			: isLlama(completions[completions.length - 1])
+			? 'Llama'
+			: 'GPT'
+	) as Completion;
+
+	function initCompletion(mode: Mode): Completion {
+		const newId = completions.length + 1;
+
+		if (mode === 'GPT') {
+			return {
+				messages: [
+					{ role: 'system', content: '' },
+					{ role: 'user', content: '' },
+					{ role: 'assistant', content: '' }
+				],
+				id: newId
+			};
+		} else if (mode === 'Llama') {
+			return { prompt: '', completion: '', id: newId };
+		} else
+			return {
+				messages: [
+					{ role: 'system', content: '' },
+					{ role: 'user', content: '' },
+					{ role: 'assistant', content: '' }
+				],
+				id: newId
+			};
+	}
+
 	function addCompletion() {
 		db.table('completions').add(completion);
 		completions = [...completions, completion];
 		// Resetting the completion
-		completion = {
-			messages: [
-				{
-					role: 'system',
-					content: ''
-				},
-				{
-					role: 'user',
-					content: ''
-				},
-				{
-					role: 'assistant',
-					content: ''
-				}
-			],
-			id: completions.length + 1
-		};
+		initCompletion(isGPT(completion) ? 'GPT' : isLlama(completion) ? 'Llama' : 'GPT');
+	}
+
+	function toggleCompletionMode(mode: Mode) {
+		completion = initCompletion(mode) as Completion;
 	}
 </script>
 
@@ -66,36 +73,71 @@
 	<p use:melt={$description} class="mb-5 mt-2 leading-normal text-muted">
 		Make changes to your profile here. Click save when you're done.
 	</p>
-	<fieldset class="mb-4 flex items-center gap-5">
-		<label class="w-[90px] text-right text-primary-foreground" for="system"> System </label>
-		<textarea
-			class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
-			id="system"
-			bind:value={completion.messages[0].content}
-			maxlength="2000"
-			placeholder="Enter System Prompt..."
-		/>
-	</fieldset>
-	<fieldset class="mb-4 flex items-center gap-5">
-		<label class="w-[90px] text-right text-primary-foreground" for="user"> User </label>
-		<textarea
-			class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
-			id="user"
-			maxlength="2000"
-			bind:value={completion.messages[1].content}
-			placeholder="Enter User Prompt..."
-		/>
-	</fieldset>
-	<fieldset class="mb-4 flex items-center gap-5">
-		<label class="w-[90px] text-right text-primary-foreground" for="assistant"> Assistant </label>
-		<textarea
-			class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
-			id="assistant"
-			placeholder="Enter Assistant Prompt..."
-			bind:value={completion.messages[2].content}
-			maxlength="4000"
-		/>
-	</fieldset>
+	<div class="flex gap-2">
+		<Button
+			className={isGPT(completion) ? 'bg-background' : 'bg-secondary'}
+			on:click={() => toggleCompletionMode('GPT')}>GPT</Button
+		>
+		<Button
+			className={isLlama(completion) ? 'bg-background' : 'bg-secondary'}
+			on:click={() => toggleCompletionMode('Llama')}>LLaMa 2</Button
+		>
+	</div>
+	{#if isGPT(completion)}
+		<fieldset class="mb-4 flex items-center gap-5">
+			<label class="w-[90px] text-right text-primary-foreground" for="system"> System </label>
+			<textarea
+				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
+				id="system"
+				bind:value={completion.messages[0].content}
+				maxlength="2000"
+				placeholder="Enter System Prompt..."
+			/>
+		</fieldset>
+		<fieldset class="mb-4 flex items-center gap-5">
+			<label class="w-[90px] text-right text-primary-foreground" for="user"> User </label>
+			<textarea
+				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
+				id="user"
+				maxlength="2000"
+				bind:value={completion.messages[1].content}
+				placeholder="Enter User Prompt..."
+			/>
+		</fieldset>
+		<fieldset class="mb-4 flex items-center gap-5">
+			<label class="w-[90px] text-right text-primary-foreground" for="assistant"> Assistant </label>
+			<textarea
+				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
+				id="assistant"
+				placeholder="Enter Assistant Prompt..."
+				bind:value={completion.messages[2].content}
+				maxlength="4000"
+			/>
+		</fieldset>
+	{:else if isLlama(completion)}
+		<fieldset class="mb-4 flex items-center gap-5">
+			<label class="w-[90px] text-right text-primary-foreground" for="user"> Prompt </label>
+			<textarea
+				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
+				id="user"
+				maxlength="2000"
+				bind:value={completion.prompt}
+				placeholder="Enter Prompt..."
+			/>
+		</fieldset>
+		<fieldset class="mb-4 flex items-center gap-5">
+			<label class="w-[90px] text-right text-primary-foreground" for="assistant">
+				Completion
+			</label>
+			<textarea
+				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
+				id="assistant"
+				placeholder="Enter Completion..."
+				bind:value={completion.completion}
+				maxlength="4000"
+			/>
+		</fieldset>
+	{/if}
 	<div class="mt-6 flex justify-end gap-4">
 		<DialogButton
 			{close}

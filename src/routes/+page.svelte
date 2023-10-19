@@ -10,7 +10,8 @@
 	import { serializeCompletionArray } from '$lib/utils/export';
 	import { onMount } from 'svelte';
 	import { db } from '$lib/database/database';
-	export let loading = false
+	import TableFooter from '$lib/components/Table/TableFooter.svelte';
+	export let loading = false;
 	let code = '';
 	let tabOpen = false;
 	let checked: boolean[] = [];
@@ -44,9 +45,9 @@
 	}
 
 	onMount(async () => {
-		loading = true
+		loading = true;
 		await getStore();
-		loading = false
+		loading = false;
 	});
 </script>
 
@@ -55,7 +56,7 @@
 </svelte:head>
 
 <div class="h-full flex items-start justify-center gap-2">
-	<div class="max-w-5xl w-full h-full relative items-start flex flex-col gap-2">
+	<div class="max-w-7xl w-full h-full relative items-start flex flex-col gap-2">
 		{#if tabOpen}
 			<div class="flex h-full flex-col w-full gap-2">
 				<div class="flex w-full justify-end items-end gap-2">
@@ -88,8 +89,15 @@
 				</div>
 			</div>
 		{:else}
-			<TableButtons {deleteCheckedItems} bind:completions bind:tabOpen />
-			<Table bind:completions bind:allChecked {checked} />
+			<section class="antialiased w-full">
+				<div>
+					<div class="bg-gray-800 relative shadow-md rounded-t-lg">
+						<TableButtons {deleteCheckedItems} bind:completions bind:tabOpen/>
+					</div>
+				</div>
+				<Table bind:completions bind:allChecked {checked}/>
+				<TableFooter />
+			</section>
 		{/if}
 	</div>
 </div>
