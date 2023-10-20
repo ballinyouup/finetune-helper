@@ -1,9 +1,9 @@
 <script lang="ts">
-    export let width = 20;
-    export let height = 20;
-    export let fill = "white";
-    export let name: "facebook" | "instagram" | "google" | "email" | "phone";
-    export let className: string = "";
+	export let width = 20;
+	export let height = 20;
+	export let fill = 'white';
+	export let name: 'facebook' | 'instagram' | 'google' | 'email' | 'phone' | 'twitter';
+	export let className: string = '';
 </script>
 
 {#if name === 'facebook'}
@@ -19,6 +19,18 @@
 			d="M59.5 1H4.5C2.5 1 1 2.6 1 4.5V59.5C1 61.5 2.6 63 4.5 63H34.1V38.9H26.1V29.6H34.1V22.7C34.1 14.7 38.9 10.3 46.1 10.3C48.5 10.3 50.9 10.4 53.3 10.7V19H48.5C44.7 19 43.9 20.8 43.9 23.5V29.4H53L51.7 38.8H43.7V62.6H59.5C61.5 62.6 63 61.1 63 59.1V4.5C62.9 2.5 61.3 1 59.5 1Z"
 		/>
 	</svg>
+{:else if name === 'twitter'}
+	<svg
+		{fill}
+		{width}
+		{height}
+		viewBox="0 0 64 64"
+		xmlns="http://www.w3.org/2000/svg"
+		class={className}
+		><path
+			d="M56.1 15.3L59.9 10.5C61 9.2 61.3 8.2 61.4 7.7C58.4 9.5 55.6 10.1 53.8 10.1H53.1L52.7 9.7C50.3 7.6 47.3 6.5 44.1 6.5C37.1 6.5 31.6 12.3 31.6 19C31.6 19.4 31.6 20 31.7 20.4L32 22.4L29.9 22.3C17.1 21.9 6.6 10.9 4.9 9C2.1 14 3.7 18.8 5.4 21.8L8.8 27.4L3.4 24.4C3.5 28.6 5.1 31.9 8.2 34.3L10.9 36.3L8.2 37.4C9.9 42.5 13.7 44.6 16.5 45.4L20.2 46.4L16.7 48.8C11.1 52.8 4.1 52.5 1 52.2C7.3 56.6 14.8 57.6 20 57.6C23.9 57.6 26.8 57.2 27.5 56.9C55.5 50.3 56.8 25.3 56.8 20.3V19.6L57.4 19.2C60.8 16 62.2 14.3 63 13.3C62.7 13.4 62.3 13.6 61.9 13.7L56.1 15.3Z"
+		/></svg
+	>
 {:else if name === 'instagram'}
 	<svg
 		{fill}

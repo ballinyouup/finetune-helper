@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { blur } from 'svelte/transition';
 	import copy from 'copy-text-to-clipboard';
-	export let completions: Completion[] = []
+	export let completions: Completion[] = [];
 	import { Check, Copy } from 'lucide-svelte';
 	import { serializeCompletionArray } from '$lib/utils/export';
 	import type { Completion } from '$lib/stores/output';
