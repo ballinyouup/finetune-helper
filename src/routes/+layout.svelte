@@ -4,7 +4,7 @@
 	import Footer from '$lib/components/Footer/Footer.svelte';
 </script>
 
-<div class="w-full flex flex-col bg-background sm:h-full">
+<div class="w-full flex flex-col bg-background">
 	<Navbar />
 	<slot />
 	<Footer />

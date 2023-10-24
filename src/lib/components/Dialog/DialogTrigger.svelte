@@ -5,8 +5,9 @@
 	type TriggerType = DialogReturnType['elements']['trigger'];
 	export let className: string = '';
 	export let trigger: TriggerType;
+	export let testId: string;
 </script>
 
-<button use:melt={$trigger} class={className}>
+<button data-testId={testId} use:melt={$trigger} class={className}>
 	<slot />
 </button>

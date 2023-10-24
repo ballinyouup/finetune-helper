@@ -1,3 +1,4 @@
+import { writable } from "svelte/store";
 
 export type GPT = {
     messages: {
@@ -24,6 +25,6 @@ export function isLlama(item: Completion): item is Llama {
     return typeof item === 'object' && 'prompt' in item && 'completion' in item;
 }
 
+export let completions = writable<Completion[]>([])
 
-
-
+export let checked = writable<boolean[]>([])

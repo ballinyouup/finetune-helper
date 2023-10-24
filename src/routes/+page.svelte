@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Completion } from '$lib/stores/output';
+	import { completions, checked } from '$lib/stores/output';
 	import Highlight, { LineNumbers } from 'svelte-highlight';
 	import json from 'svelte-highlight/languages/json';
 	import base16IrBlack from 'svelte-highlight/styles/base16-ir-black';
@@ -13,22 +13,21 @@
 	import TableFooter from '$lib/components/Table/TableFooter.svelte';
 	let code = '';
 	let tabOpen = false;
-	let checked: boolean[] = [];
+
 	let allChecked = false;
 	let prettify = false;
-	let completions: Completion[] = [];
-	$: code = serializeCompletionArray(completions, prettify);
+	$: code = serializeCompletionArray($completions, prettify);
 
 	$: {
 		if (allChecked) {
-			checked = Array(completions.length).fill(true);
+			$checked = Array($completions.length).fill(true);
 		} else {
 			allChecked = false;
 		}
 	}
 	async function deleteCheckedItems() {
-		const deletePromises = completions.map((completion, index) => {
-			if (checked[index]) {
+		const deletePromises = $completions.map((completion, index) => {
+			if ($checked[index]) {
 				return db.table('completions').delete(completion.id);
 			}
 			return Promise.resolve();
@@ -37,10 +36,10 @@
 		await Promise.all(deletePromises);
 		await getStore();
 		allChecked = false;
-		checked = Array(completions.length).fill(false);
+		$checked = Array($completions.length).fill(false);
 	}
 	export async function getStore() {
-		completions = await db.table('completions').toArray();
+		$completions = await db.table('completions').toArray();
 	}
 
 	onMount(async () => {
@@ -75,24 +74,23 @@
 						<Eye class="h-5 w-5" /> Table
 					</button>
 				</div>
-				<div class="rounded-lg overflow-scroll h-96 w-full relative">
+				<div class="rounded-lg overflow-scroll h-screen w-full relative">
 					<Highlight language={json} {code} let:highlighted>
 						<div class="w-full bg-primary p-2.5">
 							<span>JSON</span>
-							<CopyButton {completions} />
+							<CopyButton />
 						</div>
 						<LineNumbers {highlighted} hideBorder />
 					</Highlight>
 				</div>
 			</div>
 		{:else}
-			<section class="antialiased w-full px-5 sm:p-0">
-				<div>
-					<div class="bg-gray-800 relative shadow-md rounded-t-lg">
-						<TableButtons {deleteCheckedItems} bind:completions bind:tabOpen />
-					</div>
+			<section class="antialiased w-full px-5 sm:p-0 h-full">
+				<div class="bg-gray-800 relative shadow-md rounded-t-lg">
+					<TableButtons {deleteCheckedItems} bind:tabOpen />
 				</div>
-				<Table bind:completions bind:allChecked {checked} />
+				<Table bind:allChecked />
+				<TableFooter />
 			</section>
 		{/if}
 	</div>

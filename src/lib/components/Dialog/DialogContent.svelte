@@ -9,20 +9,21 @@
 	export let close: ReturnType<typeof createDialog>['elements']['close'];
 	import type { Completion } from '$lib/stores/output';
 	import { db } from '$lib/database/database';
-	export let completions: Completion[] = [];
+	import { completions } from '$lib/stores/output';
 	import { isGPT, isLlama } from '$lib/stores/output';
 	import Button from '../Button.svelte';
+	export let testId: string;
 	type Mode = 'GPT' | 'Llama';
 	let completion: Completion = initCompletion(
-		isGPT(completions[completions.length - 1])
+		isGPT($completions[$completions.length - 1])
 			? 'GPT'
-			: isLlama(completions[completions.length - 1])
+			: isLlama($completions[$completions.length - 1])
 			? 'Llama'
 			: 'GPT'
 	) as Completion;
 
 	function initCompletion(mode: Mode): Completion {
-		const newId = completions.length + 1;
+		const newId = $completions.length + 1;
 
 		if (mode === 'GPT') {
 			return {
@@ -48,7 +49,7 @@
 
 	function addCompletion() {
 		db.table('completions').add(completion);
-		completions = [...completions, completion];
+		$completions = [...$completions, completion];
 		// Resetting the completion
 		initCompletion(isGPT(completion) ? 'GPT' : isLlama(completion) ? 'Llama' : 'GPT');
 	}
@@ -59,6 +60,7 @@
 </script>
 
 <div
+	data-testId={testId}
 	class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw] sm:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-primary p-6 shadow-lg"
 	transition:flyAndScale={{
 		duration: 150,
@@ -75,12 +77,14 @@
 	</p>
 	<div class="flex gap-2 mb-4">
 		<Button
+			data-testId="set-gpt"
 			className={isGPT(completion) ? 'bg-background' : 'bg-secondary'}
 			on:click={() => toggleCompletionMode('GPT')}
 		>
 			GPT
 		</Button>
 		<Button
+			data-testId="set-llama"
 			className={isLlama(completion) ? 'bg-background' : 'bg-secondary'}
 			on:click={() => toggleCompletionMode('Llama')}
 		>
@@ -91,6 +95,7 @@
 		<fieldset class="mb-4 flex items-start gap-5">
 			<label class="w-[90px] text-right text-primary-foreground" for="system">System</label>
 			<textarea
+				data-testId="textarea-system"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
 				id="system"
 				bind:value={completion.messages[0].content}
@@ -100,6 +105,7 @@
 		<fieldset class="mb-4 flex items-start gap-5">
 			<label class="w-[90px] text-right text-primary-foreground" for="user">User</label>
 			<textarea
+				data-testId="textarea-user"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
 				id="user"
 				bind:value={completion.messages[1].content}
@@ -109,6 +115,7 @@
 		<fieldset class="mb-4 flex items-start gap-5">
 			<label class="w-[90px] text-right text-primary-foreground" for="assistant">Assistant</label>
 			<textarea
+				data-testId="textarea-assistant"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
 				id="assistant"
 				placeholder="Enter Assistant Prompt..."
@@ -120,8 +127,9 @@
 		<fieldset class="mb-4 flex items-start gap-5">
 			<label class="w-[90px] text-right text-primary-foreground" for="user">Prompt</label>
 			<textarea
+				data-testId="textarea-prompt"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
-				id="user"
+				id="prompt"
 				bind:value={completion.prompt}
 				placeholder="Enter Prompt..."
 			/>
@@ -129,8 +137,9 @@
 		<fieldset class="mb-4 flex items-start gap-5">
 			<label class="w-[90px] text-right text-primary-foreground" for="assistant">Completion</label>
 			<textarea
+				data-testId="textarea-completion"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
-				id="assistant"
+				id="completion"
 				placeholder="Enter Completion..."
 				required
 				bind:value={completion.completion}
@@ -139,6 +148,7 @@
 	{/if}
 	<div class="mt-6 flex justify-end gap-4">
 		<DialogButton
+			data-testId="dialog-add"
 			{close}
 			on:click={() => addCompletion()}
 			className="inline-flex h-8 items-center justify-center rounded-lg hover:bg-secondary px-4 font-medium leading-none text-white border border-white/20 transition duration-150"
@@ -146,6 +156,7 @@
 			Add
 		</DialogButton>
 		<DialogButton
+			data-testId="dialog-cancel"
 			{close}
 			className="inline-flex h-8 items-center justify-center rounded-lg hover:bg-secondary px-4 font-medium leading-none text-white transition duration-150 border border-white/20"
 		>
@@ -153,6 +164,7 @@
 		</DialogButton>
 	</div>
 	<DialogButton
+		data-testId="dialog-close"
 		{close}
 		ariaLabel="close"
 		className="absolute right-4 top-4 inline-flex

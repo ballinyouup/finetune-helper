@@ -1,6 +1,7 @@
 <script lang="ts">
 	export let checked: boolean;
 	import { X } from 'lucide-svelte';
+	export let testId: string;
 	function toggleCheckbox() {
 		checked = !checked;
 	}
@@ -13,6 +14,7 @@
 </script>
 
 <button
+	data-testId={testId}
 	class="w-5 h-5 bg-primary focus:outline-none focus:ring flex items-center justify-center rounded border border-gray-400/50 {checked
 		? 'bg-background'
 		: ''}"
@@ -21,10 +23,11 @@
 	aria-label="custom checkbox"
 	role="checkbox"
 	aria-checked={checked}
-	>{#if checked}
-		<X />
-	{/if}</button
 >
+	{#if checked}
+		<X />
+	{/if}
+</button>
 
 <input
 	type="checkbox"
