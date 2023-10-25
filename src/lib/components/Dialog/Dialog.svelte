@@ -15,12 +15,8 @@
 	});
 </script>
 
-<DialogTrigger
-	testId={testId + '-trigger'}
-	className="h-fit bg-primary p-2 rounded-lg flex items-center text-lg"
-	{trigger}
->
-	<Plus strokeWidth={2} /> Add Input
+<DialogTrigger testId={testId + '-trigger'} {trigger}>
+	<Plus strokeWidth={2} />
 </DialogTrigger>
 <DialogContainer {portalled} {open}>
 	<DialogOverlay {overlay} />

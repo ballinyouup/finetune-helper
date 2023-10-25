@@ -1,5 +1,5 @@
 <nav
-	class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4 bg-primary rounded-b-lg"
+	class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4 bg-background"
 	aria-label="Table navigation"
 >
 	<!-- <span class="text-sm font-normal text-gray-500 dark:text-gray-400">

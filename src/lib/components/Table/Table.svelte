@@ -4,9 +4,9 @@
 	export let allChecked: boolean;
 </script>
 
-<div class="overflow-x-auto h-screen bg-secondary">
-	<table class="w-full text-sm text-left text-gray-400">
-		<thead class="text-xs uppercase bg-gray-700 text-gray-400">
+<div class="overflow-x-auto h-screen bg-background">
+	<table class="w-full text-sm text-left">
+		<thead class="text-xs uppercase bg-accent/50 text-white">
 			<tr>
 				{#if $completions.length > 0 && isGPT($completions[$completions.length - 1])}
 					<th scope="col" class="px-4 py-3">
@@ -26,26 +26,30 @@
 		</thead>
 		<tbody>
 			{#each $completions as row, index}
-				<tr class="border-b border-gray-700 bg-primary">
-					<th scope="col" class="px-4 py-3">
+				<tr class="border-b border-ring/25 text-white bg-secondary w-full">
+					<th scope="col" class="px-4 py-3 w-fit">
 						<Checkbox testId={`checked-${index}`} bind:checked={$checked[index]} />
 					</th>
 					{#if isGPT(row)}
-						<td class="max-w-sm box-content">
-							<div class="px-4 py-3 w-full overflow-scroll">{row.messages[0].content}</div>
+						<td class="box-content sm:min-w-[400px] max-w-[400px] overflow-hidden w-full">
+							<div class="px-4 py-3 overflow-scroll">{row.messages[0].content}</div>
 						</td>
-						<td class=" max-w-sm box-content">
-							<div class="px-4 py-3 w-full overflow-scroll">{row.messages[1].content}</div>
+						<td class=" box-content sm:min-w-[400px] max-w-[400px] overflow-hidden w-full">
+							<div class="px-4 py-3 overflow-scroll">
+								{row.messages[1].content}
+							</div>
 						</td>
-						<td class=" max-w-sm box-content overflow-hidden pr-2">
-							<div class="px-4 py-3 w-full overflow-scroll">{row.messages[2].content}</div>
+						<td class="box-content sm:min-w-[400px] max-w-[400px] overflow-hidden pr-4 w-full">
+							<div class="px-4 py-3 overflow-scroll w-full">
+								{row.messages[2].content}
+							</div>
 						</td>
 					{:else}
-						<td class=" max-w-sm box-content">
-							<div class="px-4 py-3 w-full overflow-scroll">{row.prompt}</div>
+						<td class=" max-w-xs box-content">
+							<div class="px-4 py-3 w-full overflow-scroll max-w-xs">{row.prompt}</div>
 						</td>
-						<td class=" max-w-sm box-content">
-							<div class="px-4 py-3 w-full overflow-hidden pr-2">{row.completion}</div>
+						<td class=" max-w-xs box-content">
+							<div class="px-4 py-3 w-full overflow-hidden pr-2 max-w-xs">{row.completion}</div>
 						</td>
 					{/if}
 				</tr>

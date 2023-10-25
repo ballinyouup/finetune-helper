@@ -61,7 +61,7 @@
 
 <div
 	data-testId={testId}
-	class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw] sm:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-primary p-6 shadow-lg"
+	class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw] sm:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-card p-6 shadow-lg border-ring/50 border"
 	transition:flyAndScale={{
 		duration: 150,
 		y: 8,
@@ -69,23 +69,21 @@
 	}}
 	use:melt={$content}
 >
-	<h2 use:melt={$title} class="m-0 text-lg font-medium text-primary-foreground">
-		Add Conversation
-	</h2>
-	<p use:melt={$description} class="mb-5 mt-2 leading-normal text-muted">
+	<h2 use:melt={$title} class="m-0 text-lg font-medium text-white">Add Conversation</h2>
+	<p use:melt={$description} class="mb-5 mt-2 leading-normal text-muted-foreground">
 		Choose your dataset format and fill out the required fields.
 	</p>
 	<div class="flex gap-2 mb-4">
 		<Button
 			data-testId="set-gpt"
-			className={isGPT(completion) ? 'bg-background' : 'bg-secondary'}
+			variant={isGPT(completion) ? 'default' : 'outline'}
 			on:click={() => toggleCompletionMode('GPT')}
 		>
 			GPT
 		</Button>
 		<Button
 			data-testId="set-llama"
-			className={isLlama(completion) ? 'bg-background' : 'bg-secondary'}
+			variant={isLlama(completion) ? 'default' : 'outline'}
 			on:click={() => toggleCompletionMode('Llama')}
 		>
 			LLaMa 2
@@ -93,7 +91,7 @@
 	</div>
 	{#if isGPT(completion)}
 		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-primary-foreground" for="system">System</label>
+			<label class="w-[90px] text-right text-white" for="system">System</label>
 			<textarea
 				data-testId="textarea-system"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
@@ -103,7 +101,7 @@
 			/>
 		</fieldset>
 		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-primary-foreground" for="user">User</label>
+			<label class="w-[90px] text-right text-white" for="user">User</label>
 			<textarea
 				data-testId="textarea-user"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
@@ -113,7 +111,7 @@
 			/>
 		</fieldset>
 		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-primary-foreground" for="assistant">Assistant</label>
+			<label class="w-[90px] text-right text-white" for="assistant">Assistant</label>
 			<textarea
 				data-testId="textarea-assistant"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
@@ -125,7 +123,7 @@
 		</fieldset>
 	{:else if isLlama(completion)}
 		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-primary-foreground" for="user">Prompt</label>
+			<label class="w-[90px] text-right text-white" for="prompt">Prompt</label>
 			<textarea
 				data-testId="textarea-prompt"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
@@ -135,7 +133,7 @@
 			/>
 		</fieldset>
 		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-primary-foreground" for="assistant">Completion</label>
+			<label class="w-[90px] text-right text-white" for="completion">Completion</label>
 			<textarea
 				data-testId="textarea-completion"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
@@ -171,6 +169,6 @@
                 items-center justify-center rounded-full p-1 text-primary-foreground
                 hover:bg-secondary focus:bg-background transition"
 	>
-		<X class="square-4" />
+		<X class="square-4 text-white" />
 	</DialogButton>
 </div>

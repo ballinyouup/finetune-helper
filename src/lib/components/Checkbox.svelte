@@ -15,7 +15,7 @@
 
 <button
 	data-testId={testId}
-	class="w-5 h-5 bg-primary focus:outline-none focus:ring flex items-center justify-center rounded border border-gray-400/50 {checked
+	class="w-5 h-5 bg-card focus:outline-none focus:ring flex items-center justify-center rounded border border-gray-400/50 {checked
 		? 'bg-background'
 		: ''}"
 	on:click={toggleCheckbox}

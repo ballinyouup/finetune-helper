@@ -41,10 +41,12 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.0.0",
 		"copy-text-to-clipboard": "^3.2.0",
 		"dexie": "^3.2.4",
 		"lucide-svelte": "^0.286.0",
-		"tailwind-merge": "^1.14.0"
+		"tailwind-merge": "^1.14.0",
+		"tailwindcss-animate": "^1.0.7"
 	}
 }
