@@ -8,7 +8,13 @@
 	type DialogElements = ReturnType<typeof createDialog>['elements'];
 	export let action: DialogElements['trigger'] | undefined = undefined;
 	export let size: 'default' | 'sm' | 'lg' | 'icon' = 'default';
-
+	import type { HTMLButtonAttributes } from 'svelte/elements';
+	type $$Props = HTMLButtonAttributes & {
+		action?: DialogElements['trigger'] | undefined;
+		size?: 'default' | 'sm' | 'lg' | 'icon';
+		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
+		className?: string;
+	};
 	const buttonVariants = cva(
 		'inline-flex items-center justify-center whitespace-nowrap rounded-md text-base font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
 		{

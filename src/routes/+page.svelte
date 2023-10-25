@@ -55,7 +55,7 @@
 <div class="h-full flex items-start justify-center gap-2">
 	<div class="max-w-7xl w-full h-full relative items-start flex flex-col gap-2">
 		{#if tabOpen}
-			<div class="flex h-full flex-col w-full gap-2 px-5 sm:p-0 border border-ring/25">
+			<div class="flex h-full flex-col w-full gap-2 p-0 border border-ring/25">
 				<div class="flex w-full justify-end items-end gap-2 p-4 pb-2">
 					<Button className="gap-2" on:click={() => (prettify = !prettify)}>
 						{#if prettify}
