@@ -14,7 +14,7 @@ export default {
         customDomain: "finetunehelper.com",
       });
       stack.addOutputs({
-        url: site.url,
+        url: site.customDomainUrl,
       });
     });
   },
