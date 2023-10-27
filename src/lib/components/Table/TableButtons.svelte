@@ -23,10 +23,20 @@
 				<Button data-testId="delete" on:click={deleteCheckedItems}>
 					<Trash class="h-5 w-5" />
 				</Button>
-				<Button variant="default" className="gap-2" on:click={() => exportCSV($documents.completions)}>
+				<Button
+					data-testId="export-csv"
+					variant="default"
+					className="gap-2"
+					on:click={() => exportCSV($documents.completions)}
+				>
 					<Download class="h-5 w-5" /> CSV
 				</Button>
-				<Button variant="default" className="gap-2" on:click={() => exportJSONL($documents.completions)}>
+				<Button
+					data-testId="export-jsonl"
+					variant="default"
+					className="gap-2"
+					on:click={() => exportJSONL($documents.completions)}
+				>
 					<Download class="h-5 w-5" /> JSON
 				</Button>
 			</div>
@@ -60,10 +70,18 @@
 						easing: linear
 					}}
 				>
-					<Button variant="default" className="gap-2" on:click={() => exportCSV($documents.completions)}>
+					<Button
+						variant="default"
+						className="gap-2"
+						on:click={() => exportCSV($documents.completions)}
+					>
 						<Download class="h-5 w-5" /> CSV
 					</Button>
-					<Button variant="default" className="gap-2" on:click={() => exportJSONL($documents.completions)}>
+					<Button
+						variant="default"
+						className="gap-2"
+						on:click={() => exportJSONL($documents.completions)}
+					>
 						<Download class="h-5 w-5" /> JSON
 					</Button>
 					<Button variant="default" className="gap-2" on:click={() => (tabOpen = true)}>
