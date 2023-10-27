@@ -1,4 +1,4 @@
-import type { Completion, GPT, Llama } from "$lib/stores/output";
+import type { Completion, OpenAI, Llama } from "$lib/stores/output";
 
 function dataToCsv(data: Completion[]): string {
     const csvRows: string[] = [];
@@ -11,7 +11,7 @@ function dataToCsv(data: Completion[]): string {
             const row: { [key: string]: string; } = {};
 
             // Populate the row object
-            for (const message of (group as GPT).messages) {
+            for (const message of (group as OpenAI).messages) {
                 row[message.role] = `"${message.content}"`;
             }
 

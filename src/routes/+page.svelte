@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { completions, checked } from '$lib/stores/output';
+	import { checked, documents } from '$lib/stores/output';
 	import Highlight, { LineNumbers } from 'svelte-highlight';
 	import json from 'svelte-highlight/languages/json';
 	import base16IrBlack from 'svelte-highlight/styles/base16-ir-black';
@@ -12,38 +12,37 @@
 	import { db } from '$lib/database/database';
 	import TableFooter from '$lib/components/Table/TableFooter.svelte';
 	import Button from '$lib/components/Button.svelte';
+	import { page } from '$app/stores';
 	let code = '';
 	let tabOpen = false;
-
 	let allChecked = false;
 	let prettify = false;
-	$: code = serializeCompletionArray($completions, prettify);
-
+	let doc = 0;
+	$: code = serializeCompletionArray($documents.completions, prettify);
 	$: {
 		if (allChecked) {
-			$checked = Array($completions.length).fill(true);
+			$checked = Array($documents.completions.length).fill(true);
 		} else {
 			allChecked = false;
 		}
 	}
-	async function deleteCheckedItems() {
-		const deletePromises = $completions.map((completion, index) => {
-			if ($checked[index]) {
-				return db.table('completions').delete(completion.id);
-			}
-			return Promise.resolve();
-		});
 
-		await Promise.all(deletePromises);
-		await getStore();
+	// TODO add a toast
+	async function deleteCheckedItems() {
+		const updatedCompletions = $documents.completions.filter((_, index) => {
+			return !$checked[index];
+		});
+		db.table('documents').put({ id: doc, completions: updatedCompletions });
+		$documents = { id: doc, completions: updatedCompletions };
 		allChecked = false;
-		$checked = Array($completions.length).fill(false);
+		$checked = Array($documents.completions.length).fill(false);
 	}
-	export async function getStore() {
-		$completions = await db.table('completions').toArray();
+	async function getStore() {
+		$documents = (await db.table('documents').get(doc)) || { id: 0, completions: [] };
 	}
 
 	onMount(async () => {
+		doc = Number($page.url.searchParams.get('doc')) || 0;
 		await getStore();
 	});
 </script>

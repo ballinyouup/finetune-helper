@@ -9,54 +9,61 @@
 	export let close: ReturnType<typeof createDialog>['elements']['close'];
 	import type { Completion } from '$lib/stores/output';
 	import { db } from '$lib/database/database';
-	import { completions } from '$lib/stores/output';
-	import { isGPT, isLlama } from '$lib/stores/output';
+	import { documents } from '$lib/stores/output';
+	import { isOpenAI, isLlama } from '$lib/stores/output';
 	import Button from '../Button.svelte';
 	export let testId: string;
-	type Mode = 'GPT' | 'Llama';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+	let doc = 0;
+	type Mode = 'OpenAI' | 'Llama';
 	let completion: Completion = initCompletion(
-		isGPT($completions[$completions.length - 1])
-			? 'GPT'
-			: isLlama($completions[$completions.length - 1])
+		isOpenAI($documents.completions[$documents.completions.length - 1])
+			? 'OpenAI'
+			: isLlama($documents.completions[$documents.completions.length - 1])
 			? 'Llama'
-			: 'GPT'
+			: 'OpenAI'
 	) as Completion;
 
 	function initCompletion(mode: Mode): Completion {
-		const newId = $completions.length + 1;
-
-		if (mode === 'GPT') {
+		if (mode === 'OpenAI') {
 			return {
 				messages: [
 					{ role: 'system', content: '' },
 					{ role: 'user', content: '' },
 					{ role: 'assistant', content: '' }
-				],
-				id: newId
+				]
 			};
 		} else if (mode === 'Llama') {
-			return { prompt: '', completion: '', id: newId };
+			return { prompt: '', completion: '' };
 		} else
 			return {
 				messages: [
 					{ role: 'system', content: '' },
 					{ role: 'user', content: '' },
 					{ role: 'assistant', content: '' }
-				],
-				id: newId
+				]
 			};
 	}
 
-	function addCompletion() {
-		db.table('completions').add(completion);
-		$completions = [...$completions, completion];
-		// Resetting the completion
-		initCompletion(isGPT(completion) ? 'GPT' : isLlama(completion) ? 'Llama' : 'GPT');
+	async function addCompletion() {
+		await db
+			.table('documents')
+			.put({ id: doc, completions: [...$documents.completions, completion] });
+		$documents.completions = [...$documents.completions, completion];
+
+		completion = initCompletion(
+			isOpenAI(completion) ? 'OpenAI' : isLlama(completion) ? 'Llama' : 'OpenAI'
+		);
 	}
 
 	function toggleCompletionMode(mode: Mode) {
 		completion = initCompletion(mode) as Completion;
 	}
+
+	onMount(() => {
+		doc = Number($page.url.searchParams.get('doc')) || 0;
+	});
 </script>
 
 <div
@@ -75,11 +82,11 @@
 	</p>
 	<div class="flex gap-2 mb-4">
 		<Button
-			data-testId="set-gpt"
-			variant={isGPT(completion) ? 'default' : 'outline'}
-			on:click={() => toggleCompletionMode('GPT')}
+			data-testId="set-openai"
+			variant={isOpenAI(completion) ? 'default' : 'outline'}
+			on:click={() => toggleCompletionMode('OpenAI')}
 		>
-			GPT
+			OpenAI
 		</Button>
 		<Button
 			data-testId="set-llama"
@@ -89,7 +96,7 @@
 			LLaMa 2
 		</Button>
 	</div>
-	{#if isGPT(completion)}
+	{#if isOpenAI(completion)}
 		<fieldset class="mb-4 flex items-start gap-5">
 			<label class="w-[90px] text-right text-white" for="system">System</label>
 			<textarea

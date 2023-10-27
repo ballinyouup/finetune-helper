@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { isGPT, completions, checked, isLlama } from '$lib/stores/output';
+	import { isOpenAI, documents, checked, isLlama } from '$lib/stores/output';
 	import Checkbox from '../Checkbox.svelte';
 	export let allChecked: boolean;
 </script>
@@ -8,14 +8,14 @@
 	<table class="w-full text-sm text-left">
 		<thead class="text-xs uppercase bg-accent/50 text-white">
 			<tr>
-				{#if $completions.length > 0 && isGPT($completions[$completions.length - 1])}
+				{#if $documents.completions.length > 0 && isOpenAI($documents.completions[$documents.completions.length - 1])}
 					<th scope="col" class="px-4 py-3">
-						<Checkbox testId="checked-all-gpt" bind:checked={allChecked} />
+						<Checkbox testId="checked-all-openai" bind:checked={allChecked} />
 					</th>
 					<th scope="col" class="px-4 py-4">System</th>
 					<th scope="col" class="px-4 py-3">User</th>
 					<th scope="col" class="px-4 py-3">Assistant</th>
-				{:else if $completions.length > 0 && isLlama($completions[$completions.length - 1])}
+				{:else if $documents.completions.length > 0 && isLlama($documents.completions[$documents.completions.length - 1])}
 					<th scope="col" class="px-4 py-3">
 						<Checkbox testId="checked-all-llama" bind:checked={allChecked} />
 					</th>
@@ -25,12 +25,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each $completions as row, index}
+			{#each $documents.completions as row, index}
 				<tr class="border-b border-ring/25 text-white bg-secondary w-full">
 					<th scope="col" class="px-4 py-3 w-fit">
 						<Checkbox testId={`checked-${index}`} bind:checked={$checked[index]} />
 					</th>
-					{#if isGPT(row)}
+					{#if isOpenAI(row)}
 						<td class="box-content sm:min-w-[400px] max-w-[400px] overflow-hidden w-full">
 							<div class="px-4 py-3 overflow-scroll">{row.messages[0].content}</div>
 						</td>

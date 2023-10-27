@@ -1,9 +1,9 @@
 import Dexie from 'dexie';
 
-export const db = new Dexie('Completions');
+export const db = new Dexie('Documents');
 
 db.version(1).stores({
-    completions: '++id'
+    documents: '++id, completions'
 });
 
-db.table('completions');
+db.table('documents');
