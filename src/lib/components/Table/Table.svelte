@@ -4,7 +4,7 @@
 	export let allChecked: boolean;
 </script>
 
-<div class="overflow-x-auto h-screen bg-background w-screen">
+<div class="overflow-x-auto h-screen bg-background w-full">
 	<table class="w-full text-sm text-left">
 		<thead class="text-xs uppercase bg-accent/50 text-white">
 			<tr>
