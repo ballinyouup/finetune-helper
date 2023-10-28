@@ -38,11 +38,28 @@
 				{#if edit[index] === false}
 					<a
 						class="hover:underline p-2 text-lg h-fit whitespace-nowrap overflow-hidden text-ellipsis"
-						href={`/?doc=${doc.id}`}
+						href={`/${doc.id}`}
 					>
 						{doc.name}
 					</a>
-					{#if $page.url.searchParams.get('doc') === doc.id.toString()}
+					{#if $page.params.id === doc.id.toString()}
+						<div class="flex items-center gap-2 w-fit">
+							<Button
+								className="px-2 h-fit w-fit"
+								variant="ghost"
+								on:click={() => (edit[index] = true)}
+							>
+								<Edit strokeWidth="2" class="h-5 w-5" />
+							</Button>
+							<Button
+								className="px-2 h-fit w-fit"
+								variant="destructive"
+								on:click={async () => await deleteDocument(doc.id)}
+							>
+								<Trash strokeWidth="2" class="h-5 w-5" />
+							</Button>
+						</div>
+					{:else if $page.params.id === undefined && index === 0}
 						<div class="flex items-center gap-2 w-fit">
 							<Button
 								className="px-2 h-fit w-fit"

@@ -38,7 +38,6 @@
 		$checked = Array($documents.completions.length).fill(false);
 	}
 	async function getStore() {
-		console.log('Fetching Item');
 		$documents = (await db.table('documents').get(doc)) || { id: 0, completions: [] };
 	}
 
