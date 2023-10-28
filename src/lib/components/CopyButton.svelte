@@ -19,7 +19,7 @@
 	<button
 		on:click={copyClick}
 		transition:blur={{ duration: 200 }}
-		class="absolute top-1 right-4 z-50 cursor-pointer border border-white/20 rounded-lg p-1"
+		class="absolute top-1 right-4 z-30 cursor-pointer border border-white/20 rounded-lg p-1"
 	>
 		<Check class="text-green-300" strokeWidth={4} />
 	</button>
@@ -27,7 +27,7 @@
 	<button
 		on:click={copyClick}
 		transition:blur={{ duration: 200 }}
-		class="absolute top-1 right-4 z-50 cursor-pointer border border-white/20 rounded-lg p-1"
+		class="absolute top-1 right-4 z-30 cursor-pointer border border-white/20 rounded-lg p-1"
 	>
 		<Copy strokeWidth={2} />
 	</button>
