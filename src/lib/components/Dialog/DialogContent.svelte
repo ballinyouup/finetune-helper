@@ -49,7 +49,7 @@
 	async function addCompletion() {
 		await db
 			.table('documents')
-			.put({ id: doc, completions: [...$documents.completions, completion] });
+			.put({ id: doc, name: 'Untitled', completions: [...$documents.completions, completion] });
 		$documents.completions = [...$documents.completions, completion];
 
 		completion = initCompletion(

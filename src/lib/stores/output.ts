@@ -17,7 +17,8 @@ export type Llama = {
 export type Completion = OpenAI | Llama;
 
 export type Document = {
-    id?: number;
+    id: number;
+    name: string;
     completions: Completion[];
 };
 
@@ -30,5 +31,5 @@ export function isLlama(item: Completion): item is Llama {
     return typeof item === 'object' && 'prompt' in item && 'completion' in item;
 }
 
-export let documents = writable<Document>({ id: 0, completions: [] });
+export let documents = writable<Document>({ id: 0, name: "Untitled", completions: [] });
 export let checked = writable<boolean[]>([]);

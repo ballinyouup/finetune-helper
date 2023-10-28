@@ -33,7 +33,7 @@
 			return !$checked[index];
 		});
 		db.table('documents').put({ id: doc, completions: updatedCompletions });
-		$documents = { id: doc, completions: updatedCompletions };
+		$documents = { id: doc, name: 'Untitled', completions: updatedCompletions };
 		allChecked = false;
 		$checked = Array($documents.completions.length).fill(false);
 	}
@@ -70,7 +70,7 @@
 				</div>
 				<div class="overflow-scroll h-screen w-full relative">
 					<Highlight language={json} {code} let:highlighted>
-						<div class="w-full bg-secondary p-2.5">
+						<div class="w-screen bg-secondary p-2.5">
 							<span>JSON</span>
 							<CopyButton />
 						</div>
