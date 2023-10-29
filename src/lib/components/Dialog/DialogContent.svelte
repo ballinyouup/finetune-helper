@@ -7,20 +7,19 @@
 	export let title: ReturnType<typeof createDialog>['elements']['title'];
 	export let description: ReturnType<typeof createDialog>['elements']['description'];
 	export let close: ReturnType<typeof createDialog>['elements']['close'];
-	import type { Completion } from '$lib/stores/output';
+	import type { Completion } from '$lib/stores/documents';
 	import { db } from '$lib/database/database';
-	import { documents } from '$lib/stores/output';
-	import { isOpenAI, isLlama } from '$lib/stores/output';
+	import { document, getStore } from '$lib/stores/documents';
+	import { isOpenAI, isLlama } from '$lib/stores/documents';
 	import Button from '../Button.svelte';
 	export let testId: string;
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
-	let doc = 0;
 	type Mode = 'OpenAI' | 'Llama';
 	let completion: Completion = initCompletion(
-		isOpenAI($documents.completions[$documents.completions.length - 1])
+		isOpenAI($document.completions[$document.completions.length - 1])
 			? 'OpenAI'
-			: isLlama($documents.completions[$documents.completions.length - 1])
+			: isLlama($document.completions[$document.completions.length - 1])
 			? 'Llama'
 			: 'OpenAI'
 	) as Completion;
@@ -47,11 +46,12 @@
 	}
 
 	async function addCompletion() {
-		await db
-			.table('documents')
-			.put({ id: doc, name: 'Untitled', completions: [...$documents.completions, completion] });
-		$documents.completions = [...$documents.completions, completion];
-
+		await db.table('documents').put({
+			id: Number($page.params.id),
+			name: 'Untitled',
+			completions: [...$document.completions, completion]
+		});
+		$document.completions = [...$document.completions, completion];
 		completion = initCompletion(
 			isOpenAI(completion) ? 'OpenAI' : isLlama(completion) ? 'Llama' : 'OpenAI'
 		);
@@ -62,7 +62,9 @@
 	}
 
 	onMount(() => {
-		doc = Number($page.url.searchParams.get('doc')) || 0;
+		page.subscribe(async ($page) => {
+			await getStore(Number($page.params.id));
+		});
 	});
 </script>
 

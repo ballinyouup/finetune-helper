@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { checked, documents } from '$lib/stores/output';
+	import { checked, document, getStore } from '$lib/stores/documents';
 	import Highlight, { LineNumbers } from 'svelte-highlight';
 	import json from 'svelte-highlight/languages/json';
 	import base16IrBlack from 'svelte-highlight/styles/base16-ir-black';
@@ -9,7 +9,6 @@
 	import TableButtons from '$lib/components/Table/TableButtons.svelte';
 	import { serializeCompletionArray } from '$lib/utils/export';
 	import { onMount } from 'svelte';
-	import { db } from '$lib/database/database';
 	import TableFooter from '$lib/components/Table/TableFooter.svelte';
 	import Button from '$lib/components/Button.svelte';
 	import { page } from '$app/stores';
@@ -17,34 +16,18 @@
 	let tabOpen = false;
 	let allChecked = false;
 	let prettify = false;
-	let doc = 0;
-	$: code = serializeCompletionArray($documents.completions, prettify);
+	$: code = serializeCompletionArray($document.completions, prettify);
 	$: {
 		if (allChecked) {
-			$checked = Array($documents.completions.length).fill(true);
+			$checked = Array($document.completions.length).fill(true);
 		} else {
 			allChecked = false;
 		}
 	}
 
-	// TODO add a toast
-	async function deleteCheckedItems() {
-		const updatedCompletions = $documents.completions.filter((_, index) => {
-			return !$checked[index];
-		});
-		db.table('documents').put({ id: doc, completions: updatedCompletions });
-		$documents = { id: doc, name: 'Untitled', completions: updatedCompletions };
-		allChecked = false;
-		$checked = Array($documents.completions.length).fill(false);
-	}
-	async function getStore() {
-		$documents = (await db.table('documents').get(doc)) || { id: 0, completions: [] };
-	}
-
 	onMount(async () => {
 		page.subscribe(async ($page) => {
-			doc = Number($page.params.id) || 0;
-			await getStore();
+			await getStore(Number($page.params.id));
 		});
 	});
 </script>
@@ -83,7 +66,7 @@
 		{:else}
 			<section class="antialiased w-full sm:p-0 h-full border border-ring/25 overflow-hidden">
 				<div class="relative shadow-md">
-					<TableButtons {deleteCheckedItems} bind:tabOpen />
+					<TableButtons {allChecked} bind:tabOpen />
 				</div>
 				<Table bind:allChecked />
 				<TableFooter />

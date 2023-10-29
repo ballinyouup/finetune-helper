@@ -1,4 +1,4 @@
-import type { Completion, OpenAI, Llama } from "$lib/stores/output";
+import type { Completion, OpenAI, Llama } from "$lib/stores/documents";
 
 function dataToCsv(data: Completion[]): string {
     const csvRows: string[] = [];

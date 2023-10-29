@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { documents } from '$lib/stores/output';
+	import { document, checked } from '$lib/stores/documents';
+	import { db } from '$lib/database/database';
 	import { exportCSV, exportJSONL } from '$lib/utils/export';
 	import { Trash, ChevronDown, Download, Code } from 'lucide-svelte';
 	import { slide } from 'svelte/transition';
@@ -7,8 +8,17 @@
 	import Button from '../Button.svelte';
 	import { linear } from 'svelte/easing';
 	export let tabOpen: boolean;
-	export let deleteCheckedItems: () => void;
+	export let allChecked: boolean;
 	let menuOpen = false;
+	async function deleteCheckedItems() {
+		const updatedCompletions = $document.completions.filter((_, index) => {
+			return !$checked[index];
+		});
+		db.table('documents').put({ ...$document, completions: updatedCompletions });
+		$document = { ...$document, completions: updatedCompletions };
+		allChecked = false;
+		$checked = Array($document.completions.length).fill(false);
+	}
 </script>
 
 <div
@@ -27,7 +37,7 @@
 					data-testId="export-csv"
 					variant="default"
 					className="gap-2"
-					on:click={() => exportCSV($documents.completions)}
+					on:click={() => exportCSV($document.completions)}
 				>
 					<Download class="h-5 w-5" /> CSV
 				</Button>
@@ -35,7 +45,7 @@
 					data-testId="export-jsonl"
 					variant="default"
 					className="gap-2"
-					on:click={() => exportJSONL($documents.completions)}
+					on:click={() => exportJSONL($document.completions)}
 				>
 					<Download class="h-5 w-5" /> JSON
 				</Button>
@@ -73,14 +83,14 @@
 					<Button
 						variant="default"
 						className="gap-2"
-						on:click={() => exportCSV($documents.completions)}
+						on:click={() => exportCSV($document.completions)}
 					>
 						<Download class="h-5 w-5" /> CSV
 					</Button>
 					<Button
 						variant="default"
 						className="gap-2"
-						on:click={() => exportJSONL($documents.completions)}
+						on:click={() => exportJSONL($document.completions)}
 					>
 						<Download class="h-5 w-5" /> JSON
 					</Button>

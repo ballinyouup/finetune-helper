@@ -3,12 +3,12 @@
 	import copy from 'copy-text-to-clipboard';
 	import { Check, Copy } from 'lucide-svelte';
 	import { serializeCompletionArray } from '$lib/utils/export';
-	import { documents } from '$lib/stores/output';
+	import { document } from '$lib/stores/documents';
 	export let copied: boolean = false;
 	async function copyClick() {
 		if (copied === false) {
 			copied = !copied;
-			copy(serializeCompletionArray($documents.completions));
+			copy(serializeCompletionArray($document.completions));
 		} else {
 			copied = !copied;
 		}

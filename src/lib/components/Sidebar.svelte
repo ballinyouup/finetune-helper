@@ -1,41 +1,22 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte';
 	import { onMount } from 'svelte';
-	import { db } from '$lib/database/database';
-	import type { Document } from '$lib/stores/output';
+	import { documents, edit, newDocument, deleteDocument, editDocumentName, getDocuments } from '$lib/stores/documents';
 	import { X, Edit, Save, Trash } from 'lucide-svelte';
 	import { page } from '$app/stores';
-	let documents: Document[] = [];
-	let edit: boolean[] = [];
+
 	onMount(async () => {
-		documents = (await db.table('documents').toArray()) as Document[];
-		edit = Array(documents.length).fill(false);
+		await getDocuments()
 	});
-	async function newDocument() {
-		await db.table('documents').add({ id: documents.length, name: 'Untitled', completions: [] });
-		documents.push({ id: documents.length, name: 'Untitled', completions: [] });
-		documents = documents;
-	}
-
-	async function deleteDocument(id: number) {
-		documents = documents.filter((doc) => doc.id !== id);
-		await db.table('documents').delete(id);
-	}
-
-	async function editDocumentName(id: number, name: string) {
-		await db.table('documents').update(id, {
-			name: name
-		});
-		edit = Array(documents.length).fill(false);
-	}
+	
 </script>
 
 <div class="hidden flex-col lg:flex min-w-[280px] px-4 w-1/6 gap-2">
 	<Button on:click={async () => await newDocument()}>+ Document</Button>
 	<div class="flex flex-col gap-2">
-		{#each documents as doc, index}
+		{#each $documents as doc, index}
 			<div class="w-full flex items-center justify-between h-10">
-				{#if edit[index] === false}
+				{#if $edit[index] === false}
 					<a
 						class="hover:underline p-2 text-lg h-fit whitespace-nowrap overflow-hidden text-ellipsis"
 						href={`/${doc.id}`}
@@ -47,7 +28,7 @@
 							<Button
 								className="px-2 h-fit w-fit"
 								variant="ghost"
-								on:click={() => (edit[index] = true)}
+								on:click={() => ($edit[index] = true)}
 							>
 								<Edit strokeWidth="2" class="h-5 w-5" />
 							</Button>
@@ -64,7 +45,7 @@
 							<Button
 								className="px-2 h-fit w-fit"
 								variant="ghost"
-								on:click={() => (edit[index] = true)}
+								on:click={() => ($edit[index] = true)}
 							>
 								<Edit strokeWidth="2" class="h-5 w-5" />
 							</Button>
@@ -90,7 +71,7 @@
 						<Button
 							className="px-2 h-fit w-fit"
 							variant="ghost"
-							on:click={() => (edit = Array(documents.length).fill(false))}
+							on:click={() => ($edit = Array($documents.length).fill(false))}
 						>
 							<X strokeWidth="2" class="h-5 w-5" />
 						</Button>
