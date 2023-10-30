@@ -14,7 +14,6 @@
 	import Button from '../Button.svelte';
 	export let testId: string;
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { v4 as uuidv4 } from 'uuid';
 	type Mode = 'OpenAI' | 'Llama';
