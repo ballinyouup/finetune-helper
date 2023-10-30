@@ -2,6 +2,7 @@
 	import { isOpenAI, document, checked, isLlama } from '$lib/stores/documents';
 	import Checkbox from '../Checkbox.svelte';
 	export let allChecked: boolean;
+	import { Hash } from 'lucide-svelte';
 </script>
 
 <div class="overflow-x-auto h-screen bg-background w-full">
@@ -9,6 +10,9 @@
 		<thead class="text-xs uppercase bg-accent/50 text-white">
 			<tr>
 				{#if $document.completions.length > 0 && isOpenAI($document.completions[$document.completions.length - 1])}
+					<th scope="col" class="px-2 py-3">
+						<Hash class="h-4 w-4" />
+					</th>
 					<th scope="col" class="px-4 py-3">
 						<Checkbox testId="checked-all-openai" bind:checked={allChecked} />
 					</th>
@@ -27,9 +31,12 @@
 		<tbody>
 			{#each $document.completions as row, index}
 				<tr class="border-b border-ring/25 text-white bg-secondary w-full">
-					<th scope="col" class="px-4 py-3 w-fit">
+					<td class="px-2 py-3 w-fit text-center">
+						{index}
+					</td>
+					<td class="px-4 py-3 w-fit">
 						<Checkbox testId={`checked-${index}`} bind:checked={$checked[index]} />
-					</th>
+					</td>
 					{#if isOpenAI(row)}
 						<td
 							class="box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden w-full"

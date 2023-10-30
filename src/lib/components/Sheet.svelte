@@ -1,14 +1,9 @@
 <script lang="ts">
 	export let sheetOpen = false;
 	import Button from '$lib/components/Button.svelte';
-	import { onMount } from 'svelte';
-	import { documents, edit, newDocument, deleteDocument, editDocumentName, getDocuments } from '$lib/stores/documents';
+	import { documents, edit, newDocument, deleteDocument, editDocumentName } from '$lib/stores/documents';
 	import { X, Edit, Save, Trash } from 'lucide-svelte';
 	import { page } from '$app/stores';
-
-	onMount(async () => {
-		await getDocuments();
-	});
 </script>
 
 <div

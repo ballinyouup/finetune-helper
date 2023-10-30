@@ -2,7 +2,7 @@ import Dexie from 'dexie';
 
 export const db = new Dexie('Documents');
 
-db.version(1).stores({
+db.version(1.1).stores({
     documents: '++id, completions, name'
 });
 

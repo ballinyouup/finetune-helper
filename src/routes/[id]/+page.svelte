@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { checked, document, getStore } from '$lib/stores/documents';
+	import { checked, document, documents, getStore, getDocuments } from '$lib/stores/documents';
 	import Highlight, { LineNumbers } from 'svelte-highlight';
 	import json from 'svelte-highlight/languages/json';
 	import base16IrBlack from 'svelte-highlight/styles/base16-ir-black';
@@ -26,8 +26,11 @@
 	}
 
 	onMount(async () => {
+		await getDocuments();
 		page.subscribe(async ($page) => {
-			await getStore(Number($page.params.id));
+			if ($documents) {
+				await getStore($page.params.id);
+			}
 		});
 	});
 </script>

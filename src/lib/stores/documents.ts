@@ -1,6 +1,6 @@
 import { db } from "$lib/database/database";
 import { writable } from "svelte/store";
-
+import { v4 as uuidv4 } from 'uuid';
 export type OpenAI = {
     messages: {
         role: "system" | "user" | "assistant";
@@ -18,9 +18,10 @@ export type Llama = {
 export type Completion = OpenAI | Llama;
 
 export type Document = {
-    id: number;
+    id: string;
     name: string;
     completions: Completion[];
+    createdAt: Date;
 };
 
 
@@ -32,11 +33,10 @@ export function isLlama(item: Completion): item is Llama {
     return typeof item === 'object' && 'prompt' in item && 'completion' in item;
 }
 
-export let document = writable<Document>({ id: 0, name: "Untitled", completions: [] });
+export let document = writable<Document>({ id: uuidv4(), name: "Untitled", completions: [], createdAt: new Date() });
 export let documents = writable<Document[]>([]);
 export let checked = writable<boolean[]>([]);
 export let edit = writable<boolean[]>([]);
-
 
 let docs: Document[];
 documents.subscribe((doc) => {
@@ -44,26 +44,35 @@ documents.subscribe((doc) => {
 });
 
 export async function getDocuments() {
-    documents.set(await db.table('documents').toArray());
+    const items = await db.table('documents').toArray() as Document[];
+    const sortedItems = items.sort((a, b) => {
+        const dateA = new Date(a.createdAt).getTime();
+        const dateB = new Date(b.createdAt).getTime();
+        return dateB - dateA;
+    });
+    console.log(sortedItems);
+    documents.set(items.length > 0 ? sortedItems : []);
     edit.set(Array(docs.length).fill(false));
 }
 
-export async function getStore(doc: number) {
-    document.set(await db.table('documents').get(doc) || { id: 0, name: 'Untitled', completions: [] });
+export async function getStore(id: string) {
+    const item = await db.table('documents').get(id);
+    document.set(item ? item : { id: uuidv4(), name: '', completions: [], createdAt: new Date() });
 }
 
 export async function newDocument() {
-    await db.table('documents').add({ id: docs.length, name: 'Untitled', completions: [] });
-    documents.set([...docs, { id: docs.length, name: 'Untitled', completions: [] }]);
+    let uuid = uuidv4();
+    await db.table('documents').add({ id: uuid, name: 'Untitled', completions: [] });
+    documents.set([...docs, { id: uuid, name: 'Untitled', completions: [], createdAt: new Date() }]);
 }
 
-export async function deleteDocument(id: number) {
+export async function deleteDocument(id: string) {
     await db.table('documents').delete(id);
     documents.set(docs.filter((doc) => doc.id !== id));
-    document.set({ id: 0, name: "Untitled", completions: [] });
+    document.set({ id: uuidv4(), name: "Untitled", completions: [], createdAt: new Date() });
 }
 
-export async function editDocumentName(id: number, name: string) {
+export async function editDocumentName(id: string, name: string) {
     await db.table('documents').update(id, {
         name: name
     });

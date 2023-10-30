@@ -7,14 +7,16 @@
 	export let title: ReturnType<typeof createDialog>['elements']['title'];
 	export let description: ReturnType<typeof createDialog>['elements']['description'];
 	export let close: ReturnType<typeof createDialog>['elements']['close'];
-	import type { Completion } from '$lib/stores/documents';
+	import { type Completion, documents } from '$lib/stores/documents';
 	import { db } from '$lib/database/database';
-	import { document, getStore } from '$lib/stores/documents';
+	import { document } from '$lib/stores/documents';
 	import { isOpenAI, isLlama } from '$lib/stores/documents';
 	import Button from '../Button.svelte';
 	export let testId: string;
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { v4 as uuidv4 } from 'uuid';
 	type Mode = 'OpenAI' | 'Llama';
 	let completion: Completion = initCompletion(
 		isOpenAI($document.completions[$document.completions.length - 1])
@@ -46,12 +48,26 @@
 	}
 
 	async function addCompletion() {
-		await db.table('documents').put({
-			id: Number($page.params.id),
-			name: 'Untitled',
-			completions: [...$document.completions, completion]
-		});
-		$document.completions = [...$document.completions, completion];
+		if ($documents.length > 0) {
+			await db.table('documents').update($page.params.id, {
+				completions: [...$document.completions, completion]
+			});
+			$document.completions = [...$document.completions, completion];
+		} else {
+			let uuid = uuidv4();
+			await goto(`http://localhost:5173/${uuid}`);
+			await db.table('documents').add({
+				id: uuid,
+				name: 'Untitled',
+				completions: [completion],
+				createdAt: new Date()
+			});
+			$documents = [
+				...$documents,
+				{ id: uuid, name: 'Untitled', completions: [completion], createdAt: new Date() }
+			];
+			$document.completions = [completion];
+		}
 		completion = initCompletion(
 			isOpenAI(completion) ? 'OpenAI' : isLlama(completion) ? 'Llama' : 'OpenAI'
 		);
@@ -60,12 +76,6 @@
 	function toggleCompletionMode(mode: Mode) {
 		completion = initCompletion(mode) as Completion;
 	}
-
-	onMount(() => {
-		page.subscribe(async ($page) => {
-			await getStore(Number($page.params.id));
-		});
-	});
 </script>
 
 <div

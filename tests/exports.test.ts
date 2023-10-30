@@ -30,9 +30,7 @@ const expectedJSONL = [{
     ],
 }];
 
-test.describe.configure({ mode: "parallel" });
-
-test("Export - CSV", async ({ page }) => {
+test("Exports", async ({ page }) => {
     // Visit Page/Test Dialog
     await page.goto('http://localhost:5173');
     await testDialog(page);
@@ -55,20 +53,6 @@ test("Export - CSV", async ({ page }) => {
         skip_empty_lines: true
     });
     expect(records).toEqual(expectedCSV);
-    await page.close();
-});
-
-test("Export - JSONL", async ({ page }) => {
-    // Visit Page/Test Dialog
-    await page.goto('http://localhost:5173');
-    await testDialog(page);
-    // Add Item
-    await openDialog(page);
-    await page.getByTestId("set-openai").click();
-    await checkTextAreas(page, models.OpenAI);
-    await fillTextAreas(page, models.OpenAI);
-    await testAddButton(page);
-    await checkTableData(page, models.OpenAI);
 
     /** ------- Test JSON ----------*/
     const [download] = await Promise.all([
