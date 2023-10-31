@@ -4,11 +4,13 @@ import { models } from './data';
 import { checkTextAreas, fillTextAreas } from './text-areas';
 import { checkTableData, resetTable } from './table';
 import { testAddButton } from './button';
+import { testSidebar } from './sidebar';
 
 test('Item Dialogs', async ({ page }) => {
 	// Visit Page/Test Dialog
 	await page.goto('http://localhost:5173');
 	await testDialog(page);
+	await testSidebar(page)
 
 	// <------- OpenAI -------->
 	await openDialog(page);

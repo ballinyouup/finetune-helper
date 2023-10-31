@@ -15,7 +15,7 @@
 </script>
 
 <div class="hidden flex-col lg:flex min-w-[280px] px-4 w-1/6 gap-2 relative">
-	<Button on:click={async () => await newDocument()}>+ Document</Button>
+	<Button aria-label="add-document" on:click={async () => await newDocument()}>+ Document</Button>
 	{#if $documentLoading}
 		<!-- <div class="flex flex-col gap-2 pt-2">
 			<Skeleton class="w-full h-8" />
@@ -32,6 +32,7 @@
 							<a
 								class="hover:underline p-2 text-lg h-fit whitespace-nowrap overflow-hidden text-ellipsis"
 								href={`/${doc.id}`}
+								aria-label={`${doc.name}`}
 							>
 								{doc.name}
 							</a>
@@ -40,6 +41,7 @@
 									<Button
 										className="px-2 h-fit w-fit"
 										variant="ghost"
+										aria-label="Edit"
 										on:click={() => ($edit[index] = true)}
 									>
 										<Edit strokeWidth="2" class="h-5 w-5" />
@@ -47,6 +49,7 @@
 									<Button
 										className="px-2 h-fit w-fit"
 										variant="destructive"
+										aria-label="Delete"
 										on:click={async () => await deleteDocument(doc.id)}
 									>
 										<Trash strokeWidth="2" class="h-5 w-5" />
@@ -57,6 +60,7 @@
 									<Button
 										className="px-2 h-fit w-fit"
 										variant="ghost"
+										aria-label="Edit"
 										on:click={() => ($edit[index] = true)}
 									>
 										<Edit strokeWidth="2" class="h-5 w-5" />
@@ -64,6 +68,7 @@
 									<Button
 										className="px-2 h-fit w-fit"
 										variant="destructive"
+										aria-label="Delete"
 										on:click={async () => await deleteDocument(doc.id)}
 									>
 										<Trash strokeWidth="2" class="h-5 w-5" />
@@ -71,11 +76,12 @@
 								</div>
 							{/if}
 						{:else}
-							<input class="p-0.5 w-full text-black text-lg" type="text" bind:value={doc.name} />
+							<input aria-label="Name" class="p-0.5 w-full text-black text-lg" type="text" bind:value={doc.name} />
 							<div class="flex items-center w-fit gap-2 min-w-max">
 								<Button
 									className="px-2 h-fit w-fit"
 									variant="ghost"
+									aria-label="Save"
 									on:click={async () => await editDocumentName(doc.id, doc.name)}
 								>
 									<Save strokeWidth="2" class="h-5 w-5" />
@@ -83,6 +89,7 @@
 								<Button
 									className="px-2 h-fit w-fit"
 									variant="ghost"
+									aria-label="Cancel"
 									on:click={() => ($edit = Array($documents.length).fill(false))}
 								>
 									<X strokeWidth="2" class="h-5 w-5" />
