@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { isOpenAI, document, checked, isLlama } from '$lib/stores/documents';
+	import { isOpenAI, document, checked, isLlama, documentLoading } from '$lib/stores/documents';
 	import Checkbox from '../Checkbox.svelte';
 	export let allChecked: boolean;
 	import { Hash } from 'lucide-svelte';
+	import Skeleton from '../Skeleton.svelte';
 </script>
 
 <div class="overflow-x-auto h-screen bg-background w-full">
-	<table class="w-full text-sm text-left">
+	<table class="w-full text-sm text-left relative">
 		<thead class="text-xs uppercase bg-accent/50 text-white">
 			<tr>
 				{#if $document.completions.length > 0 && isOpenAI($document.completions[$document.completions.length - 1])}
@@ -28,49 +29,73 @@
 				{/if}
 			</tr>
 		</thead>
-		<tbody>
-			{#each $document.completions as row, index}
-				<tr class="border-b border-ring/25 text-white bg-secondary w-full">
-					<td class="px-2 py-3 w-fit text-center">
-						{index}
-					</td>
-					<td class="px-4 py-3 w-fit">
-						<Checkbox testId={`checked-${index}`} bind:checked={$checked[index]} />
-					</td>
-					{#if isOpenAI(row)}
-						<td
-							class="box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden w-full"
-						>
-							<div class="px-4 py-3 overflow-scroll">{row.messages[0].content}</div>
+		{#if $documentLoading}
+			<tbody class="w-full">
+				{#each Array(3) as _}
+					<tr class="border-b border-ring/25 text-white bg-transparent w-full">
+						<td class="p-0">
+							<Skeleton class="w-full h-10 rounded-none" />
 						</td>
-						<td
-							class=" box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden w-full"
-						>
-							<div class="px-4 py-3 overflow-scroll">
-								{row.messages[1].content}
-							</div>
+						<td class="p-0">
+							<Skeleton class="w-full h-10 rounded-none" />
 						</td>
-						<td
-							class="box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden pr-4 w-full"
-						>
-							<div class="px-4 py-3 overflow-scroll w-full">
-								{row.messages[2].content}
-							</div>
+						<td class="p-0">
+							<Skeleton class="w-full h-10 rounded-none" />
 						</td>
-					{:else}
-						<td
-							class="box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden w-full"
-						>
-							<div class="px-4 py-3 w-full overflow-scroll max-w-xs">{row.prompt}</div>
+						<td class="p-0">
+							<Skeleton class="w-full h-10 rounded-none" />
 						</td>
-						<td
-							class="box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden w-full"
-						>
-							<div class="px-4 py-3 w-full overflow-hidden pr-2 max-w-xs">{row.completion}</div>
+						<td class="p-0">
+							<Skeleton class="w-full h-10 rounded-none" />
 						</td>
-					{/if}
-				</tr>
-			{/each}
-		</tbody>
+					</tr>
+				{/each}
+			</tbody>
+		{:else}
+			<tbody>
+				{#each $document.completions as row, index}
+					<tr class="border-b border-ring/25 text-white bg-secondary w-full">
+						<td class="px-2 py-3 w-fit text-center">
+							{index}
+						</td>
+						<td class="px-4 py-3 w-fit">
+							<Checkbox testId={`checked-${index}`} bind:checked={$checked[index]} />
+						</td>
+						{#if isOpenAI(row)}
+							<td
+								class="box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden w-full"
+							>
+								<div class="px-4 py-3 overflow-scroll">{row.messages[0].content}</div>
+							</td>
+							<td
+								class=" box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden w-full"
+							>
+								<div class="px-4 py-3 overflow-scroll">
+									{row.messages[1].content}
+								</div>
+							</td>
+							<td
+								class="box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden pr-4 w-full"
+							>
+								<div class="px-4 py-3 overflow-scroll w-full">
+									{row.messages[2].content}
+								</div>
+							</td>
+						{:else}
+							<td
+								class="box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden w-full"
+							>
+								<div class="px-4 py-3 w-full overflow-scroll max-w-xs">{row.prompt}</div>
+							</td>
+							<td
+								class="box-content min-w-[200px] sm:min-w-[400px] max-w-[400px] overflow-hidden w-full"
+							>
+								<div class="px-4 py-3 w-full overflow-hidden pr-2 max-w-xs">{row.completion}</div>
+							</td>
+						{/if}
+					</tr>
+				{/each}
+			</tbody>
+		{/if}
 	</table>
 </div>

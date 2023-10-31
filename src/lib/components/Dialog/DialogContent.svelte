@@ -77,6 +77,8 @@
 	}
 </script>
 
+
+// TODO: Add a toggle to expand the system, user, assistant prompts
 <div
 	data-testId={testId}
 	class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw] sm:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-card p-6 shadow-lg border-ring/50 border"
@@ -108,18 +110,18 @@
 		</Button>
 	</div>
 	{#if isOpenAI(completion)}
-		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-white" for="system">System</label>
+		<fieldset class="mb-4 flex flex-col items-start gap-5">
+			<label class="text-white" for="system">System</label>
 			<textarea
 				data-testId="textarea-system"
-				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
+				class="inline-flex h-full w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
 				id="system"
 				bind:value={completion.messages[0].content}
 				placeholder="Enter System Prompt..."
 			/>
 		</fieldset>
-		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-white" for="user">User</label>
+		<fieldset class="mb-4 flex flex-col items-start gap-5">
+			<label class="text-white" for="user">User</label>
 			<textarea
 				data-testId="textarea-user"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
@@ -128,8 +130,8 @@
 				placeholder="Enter User Prompt..."
 			/>
 		</fieldset>
-		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-white" for="assistant">Assistant</label>
+		<fieldset class="mb-4 flex flex-col items-start gap-5">
+			<label class="text-white" for="assistant">Assistant</label>
 			<textarea
 				data-testId="textarea-assistant"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
@@ -140,8 +142,8 @@
 			/>
 		</fieldset>
 	{:else if isLlama(completion)}
-		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-white" for="prompt">Prompt</label>
+		<fieldset class="mb-4 flex flex-col items-start gap-5">
+			<label class="text-white" for="prompt">Prompt</label>
 			<textarea
 				data-testId="textarea-prompt"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
@@ -150,8 +152,8 @@
 				placeholder="Enter Prompt..."
 			/>
 		</fieldset>
-		<fieldset class="mb-4 flex items-start gap-5">
-			<label class="w-[90px] text-right text-white" for="completion">Completion</label>
+		<fieldset class="mb-4 flex flex-col items-start gap-5 h-full w-full">
+			<label class="text-white" for="completion">Completion</label>
 			<textarea
 				data-testId="textarea-completion"
 				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
@@ -162,6 +164,7 @@
 			/>
 		</fieldset>
 	{/if}
+	<span>Estimated Tokens: 4096</span>
 	<div class="mt-6 flex justify-end gap-4">
 		<DialogButton
 			data-testId="dialog-add"
