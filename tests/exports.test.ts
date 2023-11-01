@@ -2,43 +2,10 @@ import fs from 'fs';
 import { parse } from 'csv-parse/sync';
 import { expect, test } from '@playwright/test';
 import { openDialog, testDialog } from './dialog';
-import { models } from './data';
+import { models, expectedOpenAICSV, expectedOpenAIJSONL, expectedLlamaCSV, expectedLlamaJSONL } from './data';
 import { checkTextAreas, fillTextAreas } from './text-areas';
 import { checkTableData, resetTable } from './table';
 import { testAddButton } from './button';
-
-const expectedOpenAICSV = [{
-    system: "Entering OpenAI system data",
-    user: "Entering OpenAI user data",
-    assistant: "Entering OpenAI assistant data",
-}];
-
-const expectedOpenAIJSONL = [{
-    messages: [
-        {
-            role: "system",
-            content: "Entering OpenAI system data",
-        },
-        {
-            role: "user",
-            content: "Entering OpenAI user data",
-        },
-        {
-            role: "assistant",
-            content: "Entering OpenAI assistant data",
-        },
-    ],
-}];
-
-const expectedLlamaCSV = [{
-    prompt: "Entering Llama Prompt data",
-    completion: "Entering Llama Completion data",
-}];
-
-const expectedLlamaJSONL = [{
-    prompt: "Entering Llama Prompt data",
-    completion: "Entering Llama Completion data",
-}];
 
 test("Exports - OpenAI", async ({ page }) => {
     // Visit Page/Test Dialog

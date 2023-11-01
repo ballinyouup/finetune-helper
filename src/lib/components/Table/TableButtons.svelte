@@ -50,7 +50,7 @@
 					<Download class="h-5 w-5" /> JSON
 				</Button>
 			</div>
-			<Button variant="default" className="gap-2" on:click={() => (tabOpen = true)}>
+			<Button variant="default" className="gap-2" on:click={() => (tabOpen = true)} aria-label="view-code">
 				<Code class="h-5 w-5" />
 			</Button>
 		</div>
@@ -94,7 +94,7 @@
 					>
 						<Download class="h-5 w-5" /> JSON
 					</Button>
-					<Button variant="default" className="gap-2" on:click={() => (tabOpen = true)}>
+					<Button variant="default" className="gap-2" on:click={() => (tabOpen = true)} aria-label="view-code">
 						<Code class="h-5 w-5" /> Code
 					</Button>
 				</div>
