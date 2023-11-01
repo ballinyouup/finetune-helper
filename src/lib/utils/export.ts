@@ -1,5 +1,5 @@
-import type { Completion, OpenAI, Llama } from "$lib/stores/documents";
-
+import { type Completion, format } from "$lib/stores/documents";
+import { get } from "svelte/store";
 function dataToCsv(data: Completion[]): string {
     const csvRows: string[] = [];
 
@@ -11,7 +11,7 @@ function dataToCsv(data: Completion[]): string {
             const row: { [key: string]: string; } = {};
 
             // Populate the row object
-            for (const message of (group as OpenAI).messages) {
+            for (const message of group.messages) {
                 row[message.role] = `"${message.content}"`;
             }
 
@@ -21,13 +21,13 @@ function dataToCsv(data: Completion[]): string {
         }
     } else {
         // Handle Llama type here (assuming 'prompt' and 'completion' are properties)
-        const rowTitles = ['prompt', 'completion'] as const;
-        csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
+        // const rowTitles = ['prompt', 'completion'] as const;
+        // csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
 
-        for (const group of data) {
-            const values = rowTitles.map(title => `"${(group as Llama)[title]}"`);
-            csvRows.push(values.join(','));
-        }
+        // for (const group of data) {
+        //     const values = rowTitles.map(title => `"${(group as Llama)[title]}"`);
+        //     csvRows.push(values.join(','));
+        // }
     }
 
     return csvRows.join('\n');
@@ -61,21 +61,25 @@ export function exportCSV(output: Completion[]) {
 // Helper function to serialize the Completion array
 export function serializeCompletionArray(output: Completion[], pretty = false): string {
     if (pretty) {
-        return output.map((obj) => {
-            if ('messages' in obj) {
-                return JSON.stringify({ messages: obj.messages }, null, 2);
-            } else {
-                return JSON.stringify({ prompt: obj.prompt, completion: obj.completion }, null, 2);
-            }
-        }).join('\n');
+        if (get(format) === "OpenAI") {
+            return output.map((obj) => JSON.stringify({ messages: obj.messages }, null, 2)).join('\n');
+        } else {
+            return output.map((obj) => {
+                const formattedText = `<s>[INST] <<SYS>>${obj.messages[0].content}<<</SYS>>${obj.messages[1].content} [/INST] ${obj.messages[2].content}</s>`;
+                return JSON.stringify({ text: formattedText }, null, 2);
+            }).join('\n');
+
+        }
     } else {
-        return output.map((obj) => {
-            if ('messages' in obj) {
-                return JSON.stringify({ messages: obj.messages });
-            } else {
-                return JSON.stringify({ prompt: obj.prompt, completion: obj.completion });
-            }
-        }).join('\n');
+        if (get(format) === "OpenAI") {
+
+            return output.map((obj) => JSON.stringify({ messages: obj.messages })).join('\n');
+        } else {
+            return output.map((obj) => {
+                const formattedText = `<s>[INST] <<SYS>>${obj.messages[0].content}<<</SYS>>${obj.messages[1].content} [/INST] ${obj.messages[2].content}</s>`;
+                return JSON.stringify({ text: formattedText });
+            }).join('\n');
+        }
     }
 }
 export function exportJSONL(output: Completion[]) {

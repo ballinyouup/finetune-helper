@@ -14,7 +14,7 @@
 	import Spinner from './Spinner.svelte';
 </script>
 
-<div class="hidden flex-col lg:flex min-w-[280px] px-4 w-1/6 gap-2 relative">
+<div class="relative hidden w-1/6 min-w-[280px] flex-col gap-2 px-4 lg:flex">
 	<Button aria-label="add-document" on:click={async () => await newDocument()}>+ Document</Button>
 	{#if $documentLoading}
 		<!-- <div class="flex flex-col gap-2 pt-2">
@@ -27,17 +27,17 @@
 		<div class="flex flex-col gap-2">
 			{#each $documents as doc, index}
 				{#if doc.id && doc.name !== ''}
-					<div class="w-full flex items-center justify-between h-10">
+					<div class="flex h-10 w-full items-center justify-between">
 						{#if $edit[index] === false}
 							<a
-								class="hover:underline p-2 text-lg h-fit whitespace-nowrap overflow-hidden text-ellipsis"
+								class="h-fit overflow-hidden text-ellipsis whitespace-nowrap p-2 text-lg hover:underline"
 								href={`/${doc.id}`}
 								aria-label={`${doc.name}`}
 							>
 								{doc.name}
 							</a>
 							{#if $page.params.id === doc.id.toString()}
-								<div class="flex items-center gap-2 w-fit">
+								<div class="flex w-fit items-center gap-2">
 									<Button
 										className="px-2 h-fit w-fit"
 										variant="ghost"
@@ -56,7 +56,7 @@
 									</Button>
 								</div>
 							{:else if $page.params.id === undefined && index === 0}
-								<div class="flex items-center gap-2 w-fit">
+								<div class="flex w-fit items-center gap-2">
 									<Button
 										className="px-2 h-fit w-fit"
 										variant="ghost"
@@ -76,8 +76,13 @@
 								</div>
 							{/if}
 						{:else}
-							<input aria-label="Name" class="p-0.5 w-full text-black text-lg" type="text" bind:value={doc.name} />
-							<div class="flex items-center w-fit gap-2 min-w-max">
+							<input
+								aria-label="Name"
+								class="w-full p-0.5 text-lg text-black"
+								type="text"
+								bind:value={doc.name}
+							/>
+							<div class="flex w-fit min-w-max items-center gap-2">
 								<Button
 									className="px-2 h-fit w-fit"
 									variant="ghost"

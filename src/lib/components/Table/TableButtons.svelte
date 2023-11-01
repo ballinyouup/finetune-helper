@@ -7,6 +7,7 @@
 	import Dialog from '../Dialog/Dialog.svelte';
 	import Button from '../Button.svelte';
 	import { linear } from 'svelte/easing';
+	import ModeToggle from '../ModeToggle.svelte';
 	export let tabOpen: boolean;
 	export let allChecked: boolean;
 	let menuOpen = false;
@@ -21,49 +22,57 @@
 	}
 </script>
 
+<!-- <Button
+	data-testId="export-csv"
+	variant="default"
+	className="gap-2"
+	on:click={() => exportCSV($document.completions)}
+>
+	<Download class="h-5 w-5" /> CSV
+</Button>
+<Button
+	data-testId="export-jsonl"
+	variant="default"
+	className="gap-2"
+	on:click={() => exportJSONL($document.completions)}
+>
+	<Download class="h-5 w-5" /> JSON
+</Button> -->
 <div
-	class="flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4 sm:flex hidden bg-popover"
+	class="hidden flex-col items-center justify-between space-y-3 bg-popover p-4 sm:flex md:flex-row md:space-x-4 md:space-y-0"
 >
 	<div
-		class="w-full flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0"
+		class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:flex-row md:items-center md:space-x-3 md:space-y-0"
 	>
-		<div class="flex gap-2 justify-between w-full">
+		<div class="flex w-full justify-between gap-2">
 			<div class="flex gap-2">
 				<Dialog testId="dialog" />
 				<Button data-testId="delete" on:click={deleteCheckedItems}>
 					<Trash class="h-5 w-5" />
 				</Button>
+			</div>
+			<div class="flex gap-2">
+				<ModeToggle />
 				<Button
-					data-testId="export-csv"
 					variant="default"
 					className="gap-2"
-					on:click={() => exportCSV($document.completions)}
+					on:click={() => (tabOpen = true)}
+					aria-label="view-code"
 				>
-					<Download class="h-5 w-5" /> CSV
-				</Button>
-				<Button
-					data-testId="export-jsonl"
-					variant="default"
-					className="gap-2"
-					on:click={() => exportJSONL($document.completions)}
-				>
-					<Download class="h-5 w-5" /> JSON
+					<Code class="h-5 w-5" />
 				</Button>
 			</div>
-			<Button variant="default" className="gap-2" on:click={() => (tabOpen = true)} aria-label="view-code">
-				<Code class="h-5 w-5" />
-			</Button>
 		</div>
 	</div>
 </div>
 
 <div
-	class="flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4 sm:hidden flex"
+	class="flex flex-col items-center justify-between space-y-3 p-4 sm:hidden md:flex-row md:space-x-4 md:space-y-0"
 >
 	<div
-		class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0"
+		class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0"
 	>
-		<div class="flex gap-2 w-full relative">
+		<div class="relative flex w-full gap-2">
 			<Dialog testId="mobile-dialog" />
 			<Button on:click={deleteCheckedItems}>
 				<Trash class="h-5 w-5" />
@@ -73,7 +82,7 @@
 			</Button>
 			{#if menuOpen}
 				<div
-					class="absolute top-12 h-fit w-full bg-background rounded-lg p-2 gap-2 flex flex-col"
+					class="absolute top-12 flex h-fit w-full flex-col gap-2 rounded-lg bg-background p-2"
 					transition:slide={{
 						axis: 'y',
 						duration: 200,
@@ -94,7 +103,12 @@
 					>
 						<Download class="h-5 w-5" /> JSON
 					</Button>
-					<Button variant="default" className="gap-2" on:click={() => (tabOpen = true)} aria-label="view-code">
+					<Button
+						variant="default"
+						className="gap-2"
+						on:click={() => (tabOpen = true)}
+						aria-label="view-code"
+					>
 						<Code class="h-5 w-5" /> Code
 					</Button>
 				</div>

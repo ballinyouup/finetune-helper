@@ -9,41 +9,21 @@
 	export let close: ReturnType<typeof createDialog>['elements']['close'];
 	import { type Completion, documents } from '$lib/stores/documents';
 	import { db } from '$lib/database/database';
-	import { document } from '$lib/stores/documents';
-	import { isOpenAI, isLlama } from '$lib/stores/documents';
-	import Button from '../Button.svelte';
+	import { document, format } from '$lib/stores/documents';
 	export let testId: string;
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { v4 as uuidv4 } from 'uuid';
-	type Mode = 'OpenAI' | 'Llama';
-	let completion: Completion = initCompletion(
-		isOpenAI($document.completions[$document.completions.length - 1])
-			? 'OpenAI'
-			: isLlama($document.completions[$document.completions.length - 1])
-			? 'Llama'
-			: 'OpenAI'
-	) as Completion;
+	let completion: Completion = initCompletion() as Completion;
 
-	function initCompletion(mode: Mode): Completion {
-		if (mode === 'OpenAI') {
-			return {
-				messages: [
-					{ role: 'system', content: '' },
-					{ role: 'user', content: '' },
-					{ role: 'assistant', content: '' }
-				]
-			};
-		} else if (mode === 'Llama') {
-			return { prompt: '', completion: '' };
-		} else
-			return {
-				messages: [
-					{ role: 'system', content: '' },
-					{ role: 'user', content: '' },
-					{ role: 'assistant', content: '' }
-				]
-			};
+	function initCompletion(): Completion {
+		return {
+			messages: [
+				{ role: 'system', content: '' },
+				{ role: 'user', content: '' },
+				{ role: 'assistant', content: '' }
+			]
+		};
 	}
 
 	async function addCompletion() {
@@ -59,29 +39,33 @@
 				id: uuid,
 				name: 'Untitled',
 				completions: [completion],
-				createdAt: new Date()
+				createdAt: new Date(),
+				format: $format
 			});
 			$documents = [
 				...$documents,
-				{ id: uuid, name: 'Untitled', completions: [completion], createdAt: new Date() }
+				{
+					id: uuid,
+					name: 'Untitled',
+					completions: [completion],
+					createdAt: new Date(),
+					format: $format
+				}
 			];
 			$document.completions = [completion];
 		}
-		completion = initCompletion(
-			isOpenAI(completion) ? 'OpenAI' : isLlama(completion) ? 'Llama' : 'OpenAI'
-		);
+		completion = initCompletion();
 	}
 
-	function toggleCompletionMode(mode: Mode) {
-		completion = initCompletion(mode) as Completion;
-	}
+	// function toggleCompletionMode(mode: Mode) {
+	// 	completion = initCompletion(mode) as Completion;
+	// }
 </script>
 
-
-// TODO: Add a toggle to expand the system, user, assistant prompts
+<!-- TODO: Add a toggle to expand the system, user, assistant prompts -->
 <div
 	data-testId={testId}
-	class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw] sm:max-w-[450px] translate-x-[-50%] translate-y-[-50%] rounded-xl bg-card p-6 shadow-lg border-ring/50 border"
+	class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw] translate-x-[-50%] translate-y-[-50%] rounded-xl border border-ring/50 bg-card p-6 shadow-lg sm:max-w-[450px]"
 	transition:flyAndScale={{
 		duration: 150,
 		y: 8,
@@ -93,77 +77,38 @@
 	<p use:melt={$description} class="mb-5 mt-2 leading-normal text-muted-foreground">
 		Choose your dataset format and fill out the required fields.
 	</p>
-	<div class="flex gap-2 mb-4">
-		<Button
-			data-testId="set-openai"
-			variant={isOpenAI(completion) ? 'default' : 'outline'}
-			on:click={() => toggleCompletionMode('OpenAI')}
-		>
-			OpenAI
-		</Button>
-		<Button
-			data-testId="set-llama"
-			variant={isLlama(completion) ? 'default' : 'outline'}
-			on:click={() => toggleCompletionMode('Llama')}
-		>
-			LLaMa 2
-		</Button>
-	</div>
-	{#if isOpenAI(completion)}
-		<fieldset class="mb-4 flex flex-col items-start gap-5">
-			<label class="text-white" for="system">System</label>
-			<textarea
-				data-testId="textarea-system"
-				class="inline-flex h-full w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
-				id="system"
-				bind:value={completion.messages[0].content}
-				placeholder="Enter System Prompt..."
-			/>
-		</fieldset>
-		<fieldset class="mb-4 flex flex-col items-start gap-5">
-			<label class="text-white" for="user">User</label>
-			<textarea
-				data-testId="textarea-user"
-				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
-				id="user"
-				bind:value={completion.messages[1].content}
-				placeholder="Enter User Prompt..."
-			/>
-		</fieldset>
-		<fieldset class="mb-4 flex flex-col items-start gap-5">
-			<label class="text-white" for="assistant">Assistant</label>
-			<textarea
-				data-testId="textarea-assistant"
-				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
-				id="assistant"
-				placeholder="Enter Assistant Prompt..."
-				required
-				bind:value={completion.messages[2].content}
-			/>
-		</fieldset>
-	{:else if isLlama(completion)}
-		<fieldset class="mb-4 flex flex-col items-start gap-5">
-			<label class="text-white" for="prompt">Prompt</label>
-			<textarea
-				data-testId="textarea-prompt"
-				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
-				id="prompt"
-				bind:value={completion.prompt}
-				placeholder="Enter Prompt..."
-			/>
-		</fieldset>
-		<fieldset class="mb-4 flex flex-col items-start gap-5 h-full w-full">
-			<label class="text-white" for="completion">Completion</label>
-			<textarea
-				data-testId="textarea-completion"
-				class="inline-flex h-20 w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black resize-none"
-				id="completion"
-				placeholder="Enter Completion..."
-				required
-				bind:value={completion.completion}
-			/>
-		</fieldset>
-	{/if}
+
+	<fieldset class="mb-4 flex flex-col items-start gap-5">
+		<label class="text-white" for="system">System</label>
+		<textarea
+			data-testId="textarea-system"
+			class="inline-flex h-full w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
+			id="system"
+			bind:value={completion.messages[0].content}
+			placeholder="Enter System Prompt..."
+		/>
+	</fieldset>
+	<fieldset class="mb-4 flex flex-col items-start gap-5">
+		<label class="text-white" for="user">User</label>
+		<textarea
+			data-testId="textarea-user"
+			class="inline-flex h-20 w-full flex-1 resize-none items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
+			id="user"
+			bind:value={completion.messages[1].content}
+			placeholder="Enter User Prompt..."
+		/>
+	</fieldset>
+	<fieldset class="mb-4 flex flex-col items-start gap-5">
+		<label class="text-white" for="assistant">Assistant</label>
+		<textarea
+			data-testId="textarea-assistant"
+			class="inline-flex h-20 w-full flex-1 resize-none items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
+			id="assistant"
+			placeholder="Enter Assistant Prompt..."
+			required
+			bind:value={completion.messages[2].content}
+		/>
+	</fieldset>
 	<span>Estimated Tokens: 4096</span>
 	<div class="mt-6 flex justify-end gap-4">
 		<DialogButton

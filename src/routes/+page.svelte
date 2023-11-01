@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { checked, document, getStore, documents, getDocuments } from '$lib/stores/documents';
+	import { checked, document, getStore, documents, getDocuments, format } from '$lib/stores/documents';
 	import base16IrBlack from 'svelte-highlight/styles/base16-ir-black';
 	import Table from '$lib/components/Table/Table.svelte';
 	import TableButtons from '$lib/components/Table/TableButtons.svelte';
@@ -11,7 +11,9 @@
 	let tabOpen = false;
 	let allChecked = false;
 	let prettify = false;
-	$: code = serializeCompletionArray($document.completions, prettify);
+	$: if ($format) {
+		code = serializeCompletionArray($document.completions, prettify);
+	}
 	$: {
 		if (allChecked) {
 			$checked = Array($document.completions.length).fill(true);
