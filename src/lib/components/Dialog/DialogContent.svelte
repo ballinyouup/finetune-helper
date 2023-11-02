@@ -34,7 +34,7 @@
 			$document.completions = [...$document.completions, completion];
 		} else {
 			let uuid = uuidv4();
-			await goto(`http://localhost:5173/${uuid}`);
+			await goto(`/${uuid}`);
 			await db.table('documents').add({
 				id: uuid,
 				name: 'Untitled',
