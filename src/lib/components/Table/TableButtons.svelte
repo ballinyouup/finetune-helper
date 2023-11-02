@@ -82,7 +82,7 @@
 			</Button>
 			{#if menuOpen}
 				<div
-					class="absolute top-12 flex h-fit w-full flex-col gap-2 rounded-lg bg-background p-2"
+					class="absolute top-12 z-50 flex h-fit w-full flex-col gap-2 rounded-lg bg-background p-2"
 					transition:slide={{
 						axis: 'y',
 						duration: 200,
