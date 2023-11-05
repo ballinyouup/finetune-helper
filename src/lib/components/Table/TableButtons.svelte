@@ -19,24 +19,8 @@
 	}
 </script>
 
-<!-- <Button
-	data-testId="export-csv"
-	variant="default"
-	className="gap-2"
-	on:click={() => exportCSV($document.completions)}
->
-	<Download class="h-5 w-5" /> CSV
-</Button>
-<Button
-	data-testId="export-jsonl"
-	variant="default"
-	className="gap-2"
-	on:click={() => exportJSONL($document.completions)}
->
-	<Download class="h-5 w-5" /> JSON
-</Button> -->
 <div
-	class="hidden flex-col items-center justify-between space-y-3 bg-popover p-4 sm:flex md:flex-row md:space-x-4 md:space-y-0"
+	class="flex flex-col items-center justify-between space-y-3 bg-popover p-4 md:flex-row md:space-x-4 md:space-y-0"
 >
 	<div
 		class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:flex-row md:items-center md:space-x-3 md:space-y-0"
@@ -50,7 +34,9 @@
 				<ExportDialog />
 			</div>
 			<div class="flex gap-2">
-				<ModeToggle />
+				<div class="hidden sm:flex">
+					<ModeToggle />
+				</div>
 				<Button
 					variant="default"
 					className="gap-2"
@@ -60,30 +46,6 @@
 					<Code class="h-5 w-5" />
 				</Button>
 			</div>
-		</div>
-	</div>
-</div>
-
-<div
-	class="flex flex-col items-center justify-between space-y-3 p-4 sm:hidden md:flex-row md:space-x-4 md:space-y-0"
->
-	<div
-		class="flex w-full flex-shrink-0 flex-col items-stretch justify-end space-y-2 md:w-auto md:flex-row md:items-center md:space-x-3 md:space-y-0"
-	>
-		<div class="relative flex w-full gap-2">
-			<Dialog testId="mobile-dialog" />
-			<Button on:click={deleteCheckedItems}>
-				<Trash class="h-5 w-5" />
-			</Button>
-			<ExportDialog />
-			<Button
-				variant="default"
-				className="gap-2"
-				on:click={() => (tabOpen = true)}
-				aria-label="view-code"
-			>
-				<Code class="h-5 w-5" />
-			</Button>
 		</div>
 	</div>
 </div>
