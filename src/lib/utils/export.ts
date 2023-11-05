@@ -6,20 +6,34 @@ function dataToCsv(data: Completion[]): string {
     if (!data || data.length === 0 || !data[0] || !('messages' in data[0])) {
         return '';
     }
-    const rowTitles = ['system', 'user', 'assistant'] as const;
-    csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
 
-    for (const group of data) {
-        const row: { [key: string]: string; } = {};
+    if (get(format) === "OpenAI") {
+        const rowTitles = ['system', 'user', 'assistant'] as const;
+        csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
 
-        // Populate the row object
-        for (const message of group.messages) {
-            row[message.role] = `"${message.content}"`;
+        for (const group of data) {
+            const row: { [key: string]: string; } = {};
+
+            // Populate the row object
+            for (const message of group.messages) {
+                row[message.role] = `"${message.content}"`;
+            }
+
+            // Transform the row object to an array of messages based on rowTitles
+            const values = rowTitles.map(title => row[title]);
+            csvRows.push(values.join(','));
         }
+    } else if (get(format) === "Llama") {
+        const rowTitles = ['text'] as const;
+        csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
 
-        // Transform the row object to an array of messages based on rowTitles
-        const values = rowTitles.map(title => row[title]);
-        csvRows.push(values.join(','));
+        for (const item of data) {
+            const row: { text: string; } = {
+                text: JSON.parse(serializeCompletionArray([item], false)).text.replace(/"/g, '""')
+            };
+            const values = rowTitles.map(title => `"${row[title]}"`);
+            csvRows.push(values.join(','));
+        }
     }
 
     return csvRows.join('\n');

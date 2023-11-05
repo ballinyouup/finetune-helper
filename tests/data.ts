@@ -1,51 +1,39 @@
 export const models = {
     OpenAI: {
         textAreas: [
-            ["textarea-system", "System", "Entering OpenAI system data"],
-            ["textarea-user", "User", "Entering OpenAI user data"],
-            ["textarea-assistant", "Assistant", "Entering OpenAI assistant data"]
+            ["textarea-system", "System", "Entering system data"],
+            ["textarea-user", "User", "Entering user data"],
+            ["textarea-assistant", "Assistant", "Entering assistant data"]
         ],
-        allChecked: "checked-all-openai"
-    }, Llama: {
-        textAreas: [
-            ["textarea-prompt", "Prompt", "Entering Llama Prompt data"],
-            ["textarea-completion", "Completion", "Entering Llama Completion data"],
-        ],
-        allChecked: "checked-all-llama"
+        allChecked: "checked-all"
     },
 };
 
 export type Models = typeof models.OpenAI;
 
 export const expectedOpenAICSV = [{
-    system: "Entering OpenAI system data",
-    user: "Entering OpenAI user data",
-    assistant: "Entering OpenAI assistant data",
+    system: "Entering system data",
+    user: "Entering user data",
+    assistant: "Entering assistant data",
 }];
 
 export const expectedOpenAIJSONL = [{
     messages: [
         {
             role: "system",
-            content: "Entering OpenAI system data",
+            content: "Entering system data",
         },
         {
             role: "user",
-            content: "Entering OpenAI user data",
+            content: "Entering user data",
         },
         {
             role: "assistant",
-            content: "Entering OpenAI assistant data",
+            content: "Entering assistant data",
         },
     ],
 }];
 
-export const expectedLlamaCSV = [{
-    prompt: "Entering Llama Prompt data",
-    completion: "Entering Llama Completion data",
-}];
+export const expectedLlamaCSV = [{ text: "<s>[INST] <<SYS>>Entering system data<<</SYS>>Entering user data [/INST] Entering assistant data</s>" }];
 
-export const expectedLlamaJSONL = [{
-    prompt: "Entering Llama Prompt data",
-    completion: "Entering Llama Completion data",
-}];
+export const expectedLlamaJSONL = [{ text: "<s>[INST] <<SYS>>Entering system data<<</SYS>>Entering user data [/INST] Entering assistant data</s>" }];

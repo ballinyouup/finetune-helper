@@ -7,6 +7,7 @@
 	import DialogButton from './Dialog/DialogButton.svelte';
 	import { exportCSV, exportJSONL } from '$lib/utils/export';
 	import { document } from '$lib/stores/documents';
+	import ModeToggle from './ModeToggle.svelte';
 
 	const {
 		elements: { trigger, overlay, content, title, description, close, portalled },
@@ -16,7 +17,7 @@
 	});
 </script>
 
-<Button action={trigger}>
+<Button aria-label="export" action={trigger}>
 	<Download strokeWidth={2} />
 </Button>
 <div use:melt={$portalled}>
@@ -35,8 +36,23 @@
 			<p use:melt={$description} class="mb-5 mt-2 leading-normal text-muted-foreground">
 				Choose your export format.
 			</p>
-			<Button action={close} on:click={() => exportJSONL($document.completions)}>JSONL</Button>
-			<Button action={close} on:click={() => exportCSV($document.completions)}>CSV</Button>
+			<div class="flex flex-col gap-2">
+				<ModeToggle />
+				<Button
+					aria-label="export-jsonl"
+					action={close}
+					on:click={() => exportJSONL($document.completions)}
+				>
+					JSONL
+				</Button>
+				<Button
+					aria-label="export-csv"
+					action={close}
+					on:click={() => exportCSV($document.completions)}
+				>
+					CSV
+				</Button>
+			</div>
 		</div>
 	{/if}
 </div>

@@ -15,7 +15,7 @@
 						<Hash class="h-4 w-4" />
 					</th>
 					<th scope="col" class="px-4 py-3">
-						<Checkbox testId="checked-all-openai" bind:checked={allChecked} />
+						<Checkbox testId="checked-all" bind:checked={allChecked} />
 					</th>
 					<th scope="col" class="px-4 py-4">System</th>
 					<th scope="col" class="px-4 py-3">User</th>

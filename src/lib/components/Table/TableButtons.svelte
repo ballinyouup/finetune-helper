@@ -34,9 +34,6 @@
 				<ExportDialog />
 			</div>
 			<div class="flex gap-2">
-				<div class="hidden sm:flex">
-					<ModeToggle />
-				</div>
 				<Button
 					variant="default"
 					className="gap-2"

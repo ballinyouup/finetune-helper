@@ -1,11 +1,17 @@
 import { expectedLlamaJSONL, expectedOpenAIJSONL, models } from "./data";
 import { expect, type Page } from '@playwright/test';
 
-export async function testCodeHighlighter(page: Page, model: typeof models.Llama | typeof models.OpenAI) {
+export async function testCodeHighlighter(page: Page, model: typeof models.OpenAI) {
     await page.getByLabel("view-code").click();
-    const code = page.locator("code", {
-        hasText: model === models.OpenAI ? expectedOpenAIJSONL[0].messages[0].content : expectedLlamaJSONL[0].prompt
+    await page.getByLabel("format-openai").click();
+    let code = page.locator("code", {
+        hasText: expectedOpenAIJSONL[0].messages[0].content
     });
-    expect(code).toHaveText(JSON.stringify(model === models.OpenAI ? expectedOpenAIJSONL[0] : expectedLlamaJSONL[0]));
+    expect(code).toHaveText(JSON.stringify(expectedOpenAIJSONL[0]));
+    await page.getByLabel("format-llama").click();
+    code = page.locator("code", {
+        hasText: expectedLlamaJSONL[0].text
+    });
+    expect(code).toHaveText(JSON.stringify(expectedLlamaJSONL[0]));
     await page.getByLabel("view-table").click();
 }
