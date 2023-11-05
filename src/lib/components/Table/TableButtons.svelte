@@ -1,16 +1,13 @@
 <script lang="ts">
 	import { document, checked } from '$lib/stores/documents';
 	import { db } from '$lib/database/database';
-	import { exportCSV, exportJSONL } from '$lib/utils/export';
-	import { Trash, ChevronDown, Download, Code } from 'lucide-svelte';
-	import { slide } from 'svelte/transition';
+	import { Trash, Code } from 'lucide-svelte';
 	import Dialog from '../Dialog/Dialog.svelte';
 	import Button from '../Button.svelte';
-	import { linear } from 'svelte/easing';
 	import ModeToggle from '../ModeToggle.svelte';
+	import ExportDialog from '../ExportDialog.svelte';
 	export let tabOpen: boolean;
 	export let allChecked: boolean;
-	let menuOpen = false;
 	async function deleteCheckedItems() {
 		const updatedCompletions = $document.completions.filter((_, index) => {
 			return !$checked[index];
@@ -50,6 +47,7 @@
 				<Button data-testId="delete" on:click={deleteCheckedItems}>
 					<Trash class="h-5 w-5" />
 				</Button>
+				<ExportDialog />
 			</div>
 			<div class="flex gap-2">
 				<ModeToggle />
@@ -77,42 +75,15 @@
 			<Button on:click={deleteCheckedItems}>
 				<Trash class="h-5 w-5" />
 			</Button>
-			<Button className="text-lg" on:click={() => (menuOpen = !menuOpen)}>
-				Actions <ChevronDown class={`${menuOpen ? 'rotate-180' : 'rotate-0'} transition`} />
+			<ExportDialog />
+			<Button
+				variant="default"
+				className="gap-2"
+				on:click={() => (tabOpen = true)}
+				aria-label="view-code"
+			>
+				<Code class="h-5 w-5" />
 			</Button>
-			{#if menuOpen}
-				<div
-					class="absolute top-12 z-50 flex h-fit w-full flex-col gap-2 rounded-lg bg-background p-2"
-					transition:slide={{
-						axis: 'y',
-						duration: 200,
-						easing: linear
-					}}
-				>
-					<Button
-						variant="default"
-						className="gap-2"
-						on:click={() => exportCSV($document.completions)}
-					>
-						<Download class="h-5 w-5" /> CSV
-					</Button>
-					<Button
-						variant="default"
-						className="gap-2"
-						on:click={() => exportJSONL($document.completions)}
-					>
-						<Download class="h-5 w-5" /> JSON
-					</Button>
-					<Button
-						variant="default"
-						className="gap-2"
-						on:click={() => (tabOpen = true)}
-						aria-label="view-code"
-					>
-						<Code class="h-5 w-5" /> Code
-					</Button>
-				</div>
-			{/if}
 		</div>
 	</div>
 </div>

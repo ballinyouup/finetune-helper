@@ -14,7 +14,7 @@
 	import Spinner from './Spinner.svelte';
 </script>
 
-<div class="relative hidden w-1/6 min-w-[280px] flex-col gap-2 px-4 lg:flex">
+<div class="relative hidden w-1/6 min-w-[280px] flex-col gap-2 px-4 md:flex">
 	<Button aria-label="add-document" on:click={async () => await newDocument()}>+ Document</Button>
 	{#if $documentLoading}
 		<!-- <div class="flex flex-col gap-2 pt-2">

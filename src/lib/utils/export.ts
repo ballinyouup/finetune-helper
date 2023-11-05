@@ -3,31 +3,23 @@ import { get } from "svelte/store";
 function dataToCsv(data: Completion[]): string {
     const csvRows: string[] = [];
 
-    if ('messages' in data[0]) {
-        const rowTitles = ['system', 'user', 'assistant'] as const;
-        csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
+    if (!data || data.length === 0 || !data[0] || !('messages' in data[0])) {
+        return '';
+    }
+    const rowTitles = ['system', 'user', 'assistant'] as const;
+    csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
 
-        for (const group of data) {
-            const row: { [key: string]: string; } = {};
+    for (const group of data) {
+        const row: { [key: string]: string; } = {};
 
-            // Populate the row object
-            for (const message of group.messages) {
-                row[message.role] = `"${message.content}"`;
-            }
-
-            // Transform the row object to an array of messages based on rowTitles
-            const values = rowTitles.map(title => row[title]);
-            csvRows.push(values.join(','));
+        // Populate the row object
+        for (const message of group.messages) {
+            row[message.role] = `"${message.content}"`;
         }
-    } else {
-        // Handle Llama type here (assuming 'prompt' and 'completion' are properties)
-        // const rowTitles = ['prompt', 'completion'] as const;
-        // csvRows.push(rowTitles.map(title => `"${title}"`).join(','));
 
-        // for (const group of data) {
-        //     const values = rowTitles.map(title => `"${(group as Llama)[title]}"`);
-        //     csvRows.push(values.join(','));
-        // }
+        // Transform the row object to an array of messages based on rowTitles
+        const values = rowTitles.map(title => row[title]);
+        csvRows.push(values.join(','));
     }
 
     return csvRows.join('\n');

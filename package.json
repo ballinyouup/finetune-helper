@@ -49,6 +49,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@xenova/transformers": "^2.7.0",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.0.0",
 		"copy-text-to-clipboard": "^3.2.0",
