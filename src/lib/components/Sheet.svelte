@@ -16,16 +16,16 @@
 </script>
 
 <div
-	class="fixed top-0 right-0 w-full h-full bg-background z-40 flex flex-col p-4 items-start overflow-hidden gap-4"
+	class="fixed right-0 top-0 z-40 flex h-full w-full flex-col items-start gap-4 overflow-hidden bg-background p-4"
 	style={sheetOpen
 		? 'right: 0;transition: right 0.4s ease-in-out'
 		: 'right: -100vw; transition: right 0.4s ease-in-out'}
 >
-	<div class="flex justify-between w-full z-50">
+	<div class="z-50 flex w-full justify-between">
 		<h6>Documents</h6>
 		<button class="" on:click={() => (sheetOpen = false)}><X /></button>
 	</div>
-	<div class="flex-col flex gap-2 w-full relative">
+	<div class="relative flex w-full flex-col gap-2">
 		<Button on:click={async () => await newDocument()}>+ Document</Button>
 		{#if $documentLoading}
 			<!-- <div class="flex flex-col gap-2 pt-2 w-full">
@@ -37,16 +37,16 @@
 		{:else}
 			<div class="flex flex-col gap-2">
 				{#each $documents as doc, index}
-					<div class="w-full flex items-center justify-between h-10">
+					<div class="flex h-10 w-full items-center justify-between">
 						{#if $edit[index] === false}
 							<a
-								class="hover:underline p-2 text-lg h-fit whitespace-nowrap overflow-hidden text-ellipsis"
-								href={`/${doc.id}`}
+								class="h-fit overflow-hidden text-ellipsis whitespace-nowrap p-2 text-lg hover:underline"
+								href={`/documents/${doc.id}`}
 							>
 								{doc.name}
 							</a>
 							{#if $page.params.id === doc.id.toString()}
-								<div class="flex items-center gap-2 w-fit">
+								<div class="flex w-fit items-center gap-2">
 									<Button
 										className="px-2 h-fit w-fit"
 										variant="ghost"
@@ -63,7 +63,7 @@
 									</Button>
 								</div>
 							{:else if $page.params.id === undefined && index === 0}
-								<div class="flex items-center gap-2 w-fit">
+								<div class="flex w-fit items-center gap-2">
 									<Button
 										className="px-2 h-fit w-fit"
 										variant="ghost"
@@ -81,8 +81,8 @@
 								</div>
 							{/if}
 						{:else}
-							<input class="p-0.5 w-full text-black text-lg" type="text" bind:value={doc.name} />
-							<div class="flex items-center w-fit gap-2 min-w-max">
+							<input class="w-full p-0.5 text-lg text-black" type="text" bind:value={doc.name} />
+							<div class="flex w-fit min-w-max items-center gap-2">
 								<Button
 									className="px-2 h-fit w-fit"
 									variant="ghost"

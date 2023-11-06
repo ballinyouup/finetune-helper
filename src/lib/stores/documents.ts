@@ -62,7 +62,7 @@ export async function newDocument() {
     await db.table('documents').add({ id: uuid, name: 'Untitled', completions: [], createdAt: new Date(), format: "OpenAI" });
     documents.set([{ id: uuid, name: 'Untitled', completions: [], createdAt: new Date(), format: "OpenAI" }, ...get(documents)]);
     edit.set(Array(get(documents).length).fill(false));
-    await goto(`/${uuid}`);
+    await goto(`/documents/${uuid}`);
 }
 
 export async function deleteDocument(id: string) {

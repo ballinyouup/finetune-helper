@@ -31,7 +31,7 @@
 						{#if $edit[index] === false}
 							<a
 								class="h-fit overflow-hidden text-ellipsis whitespace-nowrap p-2 text-lg hover:underline"
-								href={`/${doc.id}`}
+								href={`/documents/${doc.id}`}
 								aria-label={`${doc.name}`}
 							>
 								{doc.name}
