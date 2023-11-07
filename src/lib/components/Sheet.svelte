@@ -1,5 +1,4 @@
 <script lang="ts">
-	export let sheetOpen = false;
 	import Button from '$lib/components/Button.svelte';
 	import {
 		documents,
@@ -13,13 +12,39 @@
 	import { page } from '$app/stores';
 	import Skeleton from './Skeleton.svelte';
 	import Spinner from './Spinner.svelte';
+	import { animate } from 'motion';
+	export let sheetOpen = false;
+	let sheet: HTMLElement;
+	$: if (sheet) {
+		if (sheetOpen) {
+			animate(
+				sheet,
+				{
+					right: '0'
+				},
+				{
+					duration: 0.4,
+					easing: 'ease-in-out'
+				}
+			);
+		} else {
+			animate(
+				sheet,
+				{
+					right: '-100vw'
+				},
+				{
+					duration: 0.4,
+					easing: 'ease-in-out'
+				}
+			);
+		}
+	}
 </script>
 
 <div
+	bind:this={sheet}
 	class="fixed right-0 top-0 z-40 flex h-full w-full flex-col items-start gap-4 overflow-hidden bg-background p-4"
-	style={sheetOpen
-		? 'right: 0;transition: right 0.4s ease-in-out'
-		: 'right: -100vw; transition: right 0.4s ease-in-out'}
 >
 	<div class="z-50 flex w-full justify-between">
 		<h6>Documents</h6>
