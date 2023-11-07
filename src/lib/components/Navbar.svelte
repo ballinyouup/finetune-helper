@@ -16,5 +16,6 @@
 		</button>
 	</div>
 </nav>
-
-<Sheet bind:sheetOpen />
+{#if sheetOpen}
+	<Sheet bind:sheetOpen />
+{/if}
