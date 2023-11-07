@@ -14,7 +14,7 @@
 		<div class="z-10 grid grid-cols-1 items-center justify-center gap-8 sm:gap-20">
 			<!-- Hero Content -->
 			<div
-				class="z-10 flex h-full w-full -translate-y-10 flex-col border border-border bg-background p-4 sm:translate-y-20"
+				class="z-10 flex h-full w-full -translate-y-10 flex-col border border-border bg-background p-4"
 			>
 				<!-- Hero Title -->
 				<HeroText />
