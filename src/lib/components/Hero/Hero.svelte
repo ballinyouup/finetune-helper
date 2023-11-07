@@ -1,19 +1,23 @@
 <script lang="ts">
 	import { ExternalLink, GraduationCap } from 'lucide-svelte';
-	import Link from './Link.svelte';
+	import Link from '../Link.svelte';
+	import HeroText from './HeroText.svelte';
+	import HeroContent from '../Three/HeroContent.svelte';
 </script>
 
-<div>
+<div class="relative !z-0 h-full w-full overflow-hidden">
 	<!-- Hero Container -->
-	<div class="mx-auto w-full max-w-7xl px-5 py-16 md:px-10 md:py-24 lg:py-32">
+	<div
+		class="relative mx-auto flex h-full w-full max-w-2xl items-center justify-center overflow-hidden px-5 py-16 md:px-6 md:py-24 lg:py-32"
+	>
 		<!-- Component -->
-		<div class="grid items-start justify-items-start gap-8 sm:gap-20 lg:grid-cols-2">
+		<div class="z-10 grid grid-cols-1 items-center justify-center gap-8 sm:gap-20">
 			<!-- Hero Content -->
-			<div class="flex flex-col">
+			<div
+				class="z-10 flex h-full w-full -translate-y-10 flex-col border border-border bg-background p-4 sm:translate-y-20"
+			>
 				<!-- Hero Title -->
-				<h1 class="mb-4 text-4xl font-bold md:text-6xl">
-					Effortless Dataset Creation Without Coding Hassles
-				</h1>
+				<HeroText />
 				<p class="mb-6 max-w-lg text-sm text-muted-foreground sm:text-xl md:mb-10 lg:mb-12">
 					Create, Convert, and Validate Datasets Offline: Your Privacy-First Solution
 				</p>
@@ -31,4 +35,8 @@
 			</div>
 		</div>
 	</div>
+	<div
+		class="absolute -bottom-40 h-96 w-full bg-gray-700 shadow-2xl shadow-gray-200 blur-[128px]"
+	></div>
+	<HeroContent />
 </div>

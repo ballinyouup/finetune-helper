@@ -22,6 +22,7 @@
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
+		"@types/three": "^0.158.2",
 		"@types/uuid": "^9.0.6",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
@@ -60,6 +61,7 @@
 		"motion": "^10.16.4",
 		"tailwind-merge": "^1.14.0",
 		"tailwindcss-animate": "^1.0.7",
+		"three": "^0.158.0",
 		"uuid": "^9.0.1"
 	}
 }

@@ -18,12 +18,12 @@
 			{/each}
 			<FooterSection>
 				<h6 class="text-white">FineTune Helper</h6>
-				<div class="grid grid-cols-1 md:grid-cols-2 space-y-0 -ml-2 w-fit">
-					<FooterSocial href="https://instagram.com/protection4allinsurance" name="Twitter"
-						><Icons icon="twitter" />
+				<div class="-ml-2 grid w-fit grid-cols-1 space-y-0 md:grid-cols-2">
+					<FooterSocial href="https://instagram.com/protection4allinsurance" name="Twitter">
+						<Icons icon="twitter" />
 					</FooterSocial>
-					<FooterSocial href="https://instagram.com/protection4allinsurance" name="Email"
-						><Icons fill="transparent" icon="email" />
+					<FooterSocial href="https://instagram.com/protection4allinsurance" name="Email">
+						<Icons fill="transparent" icon="email" />
 					</FooterSocial>
 				</div>
 			</FooterSection>

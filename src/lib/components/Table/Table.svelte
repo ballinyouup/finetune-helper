@@ -48,7 +48,7 @@
 		{:else}
 			<tbody>
 				{#each $document.completions as row, index}
-					<tr class="w-full border-b border-ring/25 bg-secondary text-white">
+					<tr class="w-full border-b border-ring/25 bg-transparent text-white">
 						<td class="w-fit px-2 py-3 text-center">
 							{index}
 						</td>
