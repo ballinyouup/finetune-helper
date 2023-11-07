@@ -3,6 +3,8 @@
 	export let prettify = false;
 	export let tabOpen = false;
 	export let code = '';
+	export let className: string = '';
+	import { cn } from '$lib/utils/cn';
 	import Button from './Button.svelte';
 	import { TableIcon } from 'lucide-svelte';
 	import { Highlight, LineNumbers } from 'svelte-highlight';
@@ -26,7 +28,7 @@
 			<TableIcon class="h-5 w-5" />
 		</Button>
 	</div>
-	<div class="relative h-screen w-full overflow-scroll">
+	<div class={cn('relative h-screen w-full overflow-scroll', className)}>
 		<Highlight language={json} {code} let:highlighted>
 			<div class="w-screen bg-secondary p-2.5">
 				<span>JSON</span>

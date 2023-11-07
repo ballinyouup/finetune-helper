@@ -9,10 +9,10 @@ import { testCodeHighlighter } from './code-highlighter';
 
 test('Item Dialogs', async ({ page }) => {
 	// Visit Page/Test Dialog
-	await page.goto('http://localhost:5173');
+	await page.goto('http://localhost:5173/documents');
 	await testDialog(page);
 	await testSidebar(page);
-	
+
 	await openDialog(page);
 	await checkTextAreas(page, models.OpenAI);
 	await fillTextAreas(page, models.OpenAI);

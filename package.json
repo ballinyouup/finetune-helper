@@ -49,6 +49,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@unpic/svelte": "^0.0.36",
 		"@xenova/transformers": "^2.7.0",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.0.0",

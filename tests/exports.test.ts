@@ -9,7 +9,7 @@ import { testAddButton } from './button';
 
 test("Exports - OpenAI", async ({ page }) => {
     // Visit Page/Test Dialog
-    await page.goto('http://localhost:5173');
+    await page.goto('http://localhost:5173/documents');
     await testDialog(page);
 
     /** ------- OPENAI ----------*/
