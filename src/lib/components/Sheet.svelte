@@ -73,14 +73,14 @@
 							{#if $page.params.id === doc.id.toString()}
 								<div class="flex w-fit items-center gap-2">
 									<Button
-										className="px-2 h-fit w-fit"
+										class="px-2 h-fit w-fit"
 										variant="ghost"
 										on:click={() => ($edit[index] = true)}
 									>
 										<Edit strokeWidth="2" class="h-5 w-5" />
 									</Button>
 									<Button
-										className="px-2 h-fit w-fit"
+										class="px-2 h-fit w-fit"
 										variant="destructive"
 										on:click={async () => await deleteDocument(doc.id)}
 									>
@@ -90,14 +90,14 @@
 							{:else if $page.params.id === undefined && index === 0}
 								<div class="flex w-fit items-center gap-2">
 									<Button
-										className="px-2 h-fit w-fit"
+										class="px-2 h-fit w-fit"
 										variant="ghost"
 										on:click={() => ($edit[index] = true)}
 									>
 										<Edit strokeWidth="2" class="h-5 w-5" />
 									</Button>
 									<Button
-										className="px-2 h-fit w-fit"
+										class="px-2 h-fit w-fit"
 										variant="destructive"
 										on:click={async () => await deleteDocument(doc.id)}
 									>
@@ -109,14 +109,14 @@
 							<input class="w-full p-0.5 text-lg text-black" type="text" bind:value={doc.name} />
 							<div class="flex w-fit min-w-max items-center gap-2">
 								<Button
-									className="px-2 h-fit w-fit"
+									class="px-2 h-fit w-fit"
 									variant="ghost"
 									on:click={async () => await editDocumentName(doc.id, doc.name)}
 								>
 									<Save strokeWidth="2" class="h-5 w-5" />
 								</Button>
 								<Button
-									className="px-2 h-fit w-fit"
+									class="px-2 h-fit w-fit"
 									variant="ghost"
 									on:click={() => ($edit = Array($documents.length).fill(false))}
 								>

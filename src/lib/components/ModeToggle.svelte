@@ -8,7 +8,7 @@
 	<Button
 		on:click={() => setFormat('OpenAI', $document.id)}
 		variant={`${$format === 'OpenAI' ? 'default' : 'outline'}`}
-		className="rounded-none transition-none"
+		class="rounded-none transition-none"
 		aria-label="format-openai"
 	>
 		<Icons icon="openai" fill={`${$format === 'OpenAI' ? 'black' : 'white'}`} />
@@ -16,7 +16,7 @@
 	<Button
 		on:click={() => setFormat('Llama', $document.id)}
 		variant={`${$format === 'Llama' ? 'default' : 'outline'}`}
-		className="rounded-none transition-none"
+		class="rounded-none transition-none"
 		aria-label="format-llama"
 	>
 		<Icons icon="meta" fill={`${$format === 'Llama' ? 'black' : 'white'}`} />

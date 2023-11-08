@@ -15,7 +15,7 @@
 
 <div class="flex h-full w-full flex-col gap-2 border border-ring/25 p-0">
 	<div class="flex w-full items-end justify-end gap-2 p-4 pb-2">
-		<Button className="gap-2" on:click={() => (prettify = !prettify)}>
+		<Button class="gap-2" on:click={() => (prettify = !prettify)}>
 			{#if prettify}
 				<X class="h-5 w-5" />
 			{:else}

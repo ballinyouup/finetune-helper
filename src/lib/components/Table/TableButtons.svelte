@@ -36,7 +36,7 @@
 			<div class="flex gap-2">
 				<Button
 					variant="default"
-					className="gap-2"
+					class="gap-2"
 					on:click={() => (tabOpen = true)}
 					aria-label="view-code"
 				>

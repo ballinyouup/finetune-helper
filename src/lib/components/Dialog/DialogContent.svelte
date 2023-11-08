@@ -14,8 +14,25 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { v4 as uuidv4 } from 'uuid';
+	import Button from '../Button.svelte';
+	import Dropzone from 'svelte-file-dropzone/Dropzone.svelte';
+	import { Folder, Edit } from 'lucide-svelte';
 	let completion: Completion = initCompletion() as Completion;
-
+	let manualOpen = false;
+	let fileOpen = false;
+	let input: HTMLInputElement;
+	let files: {
+		accepted: any[];
+		rejected: any[];
+	} = {
+		accepted: [],
+		rejected: []
+	};
+	function handleFilesSelect(e: CustomEvent) {
+		const { acceptedFiles, fileRejections } = e.detail;
+		files.accepted = [...files.accepted, ...acceptedFiles];
+		files.rejected = [...files.rejected, ...fileRejections];
+	}
 	function initCompletion(): Completion {
 		return {
 			messages: [
@@ -65,7 +82,7 @@
 <!-- TODO: Add a toggle to expand the system, user, assistant prompts -->
 <div
 	data-testId={testId}
-	class="fixed left-[50%] top-[50%] z-50 max-h-[85vh] w-[90vw] translate-x-[-50%] translate-y-[-50%] rounded-xl border border-ring/50 bg-card p-6 shadow-lg sm:max-w-[450px]"
+	class="fixed left-[50%] top-[50%] z-50 flex max-h-[85vh] w-[90vw] translate-x-[-50%] translate-y-[-50%] flex-col rounded-xl border border-ring/50 bg-card p-6 shadow-lg sm:max-w-[450px] [&>.dropzone]:!border hover:[&>.dropzone]:border-solid hover:[&>.dropzone]:brightness-50 hover:[&>.dropzone]:transition-all hover:[&>.dropzone]:!duration-300"
 	transition:flyAndScale={{
 		duration: 150,
 		y: 8,
@@ -75,42 +92,78 @@
 >
 	<h2 use:melt={$title} class="m-0 text-lg font-medium text-white">Add Conversation</h2>
 	<p use:melt={$description} class="mb-5 mt-2 leading-normal text-muted-foreground">
-		Choose your dataset format and fill out the required fields.
+		Import a file to generate a dataset or type one manually
 	</p>
-
-	<fieldset class="mb-4 flex flex-col items-start gap-5">
-		<label class="text-white" for="system">System</label>
-		<textarea
-			data-testId="textarea-system"
-			class="inline-flex h-full w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
-			id="system"
-			bind:value={completion.messages[0].content}
-			placeholder="Enter System Prompt..."
-		/>
-	</fieldset>
-	<fieldset class="mb-4 flex flex-col items-start gap-5">
-		<label class="text-white" for="user">User</label>
-		<textarea
-			data-testId="textarea-user"
-			class="inline-flex h-20 w-full flex-1 resize-none items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
-			id="user"
-			bind:value={completion.messages[1].content}
-			placeholder="Enter User Prompt..."
-		/>
-	</fieldset>
-	<fieldset class="mb-4 flex flex-col items-start gap-5">
-		<label class="text-white" for="assistant">Assistant</label>
-		<textarea
-			data-testId="textarea-assistant"
-			class="inline-flex h-20 w-full flex-1 resize-none items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
-			id="assistant"
-			placeholder="Enter Assistant Prompt..."
-			required
-			bind:value={completion.messages[2].content}
-		/>
-	</fieldset>
-	<span>Estimated Tokens: 4096</span>
-	<div class="mt-6 flex justify-end gap-4">
+	<div class="mb-2 flex gap-2">
+		<Button
+			class="w-fit"
+			on:click={() => {
+				manualOpen = false;
+				fileOpen = !fileOpen;
+			}}
+		>
+			<Folder />
+		</Button>
+		<Button
+			class="w-fit"
+			on:click={() => {
+				fileOpen = false;
+				manualOpen = !manualOpen;
+			}}
+		>
+			<Edit />
+		</Button>
+	</div>
+	{#if manualOpen}
+		<fieldset class="mb-4 flex flex-col items-start gap-5">
+			<label class="text-white" for="system">System</label>
+			<textarea
+				data-testId="textarea-system"
+				class="inline-flex h-full w-full flex-1 items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
+				id="system"
+				bind:value={completion.messages[0].content}
+				placeholder="Enter System Prompt..."
+			/>
+		</fieldset>
+		<fieldset class="mb-4 flex flex-col items-start gap-5">
+			<label class="text-white" for="user">User</label>
+			<textarea
+				data-testId="textarea-user"
+				class="inline-flex h-20 w-full flex-1 resize-none items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
+				id="user"
+				bind:value={completion.messages[1].content}
+				placeholder="Enter User Prompt..."
+			/>
+		</fieldset>
+		<fieldset class="mb-4 flex flex-col items-start gap-5">
+			<label class="text-white" for="assistant">Assistant</label>
+			<textarea
+				data-testId="textarea-assistant"
+				class="inline-flex h-20 w-full flex-1 resize-none items-center justify-center rounded-sm border border-solid p-2 leading-none text-black"
+				id="assistant"
+				placeholder="Enter Assistant Prompt..."
+				required
+				bind:value={completion.messages[2].content}
+			/>
+		</fieldset>
+		<span>Estimated Tokens: 4096</span>
+	{:else if fileOpen}
+		{#if files.accepted.length > 0 || files.rejected.length > 0}
+			{#each files.accepted as file}
+				<p class="text-white">File: {file.name}</p>
+			{/each}
+		{:else}
+			<Dropzone
+				containerClasses="[&>p]:text-white [&>p]:font-medium [&>p]:font-poppins"
+				containerStyles="border-radius: 0.375rem; background-color:transparent; hover:border: 1px solid white;"
+				accept="/*"
+				inputElement={input}
+				required
+				on:drop={handleFilesSelect}
+			/>
+		{/if}
+	{/if}
+	<div class="mt-6 flex justify-end gap-2">
 		<DialogButton
 			data-testId="dialog-add"
 			{close}
@@ -122,7 +175,7 @@
 		<DialogButton
 			data-testId="dialog-cancel"
 			{close}
-			className="inline-flex h-8 items-center justify-center rounded-lg hover:bg-secondary px-4 font-medium leading-none text-white transition duration-150 border border-white/20"
+			className="w-fit inline-flex h-8 items-center justify-center rounded-lg hover:bg-secondary px-4 font-medium leading-none text-white transition duration-150 border border-white/20"
 		>
 			Cancel
 		</DialogButton>
@@ -132,8 +185,8 @@
 		{close}
 		ariaLabel="close"
 		className="absolute right-4 top-4 inline-flex
-                items-center justify-center rounded-full p-1 text-primary-foreground
-                hover:bg-secondary focus:bg-background transition"
+		items-center justify-center rounded-full p-1 text-primary-foreground
+		hover:bg-secondary focus:bg-background transition"
 	>
 		<X class="square-4 text-white" />
 	</DialogButton>

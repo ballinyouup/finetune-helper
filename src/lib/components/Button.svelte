@@ -4,7 +4,8 @@
 	import { cva } from 'class-variance-authority';
 	export let variant: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link' =
 		'default';
-	export let className = '';
+	let className = '';
+	export {className as class}
 	type DialogElements = ReturnType<typeof createDialog>['elements'];
 	export let action: DialogElements['trigger'] | DialogElements['close'] | undefined = undefined;
 	export let size: 'default' | 'sm' | 'lg' | 'icon' = 'default';
@@ -13,7 +14,7 @@
 		action?: DialogElements['trigger'] | DialogElements['close'] | undefined;
 		size?: 'default' | 'sm' | 'lg' | 'icon';
 		variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
-		className?: string;
+		class?: string;
 	};
 	const buttonVariants = cva(
     'inline-flex items-center justify-center whitespace-nowrap rounded-md text-base font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
