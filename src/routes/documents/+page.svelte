@@ -34,12 +34,12 @@
 	{@html base16IrBlack}
 </svelte:head>
 
-<div class="h-full flex items-start justify-center gap-2">
-	<div class="max-w-7xl w-screen h-full relative items-start flex flex-col gap-2">
+<div class="flex h-full items-start justify-center gap-2">
+	<div class="relative flex h-full w-screen max-w-7xl flex-col items-start gap-2">
 		{#if tabOpen}
 			<CodeHighlighter bind:code bind:prettify bind:tabOpen />
 		{:else}
-			<section class="antialiased w-full sm:p-0 h-full border border-ring/25 overflow-hidden">
+			<section class="h-full w-full overflow-hidden border border-ring/25 antialiased sm:p-0">
 				<div class="relative shadow-md">
 					<TableButtons {allChecked} bind:tabOpen />
 				</div>

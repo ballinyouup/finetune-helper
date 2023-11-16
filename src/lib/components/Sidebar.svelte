@@ -12,6 +12,7 @@
 	import { page } from '$app/stores';
 	import Skeleton from '$lib/components/Skeleton.svelte';
 	import Spinner from './Spinner.svelte';
+	import ButtonDialog from './ButtonDialog.svelte';
 </script>
 
 <div class="relative hidden w-1/6 min-w-[280px] flex-col gap-2 px-4 md:flex">
@@ -39,40 +40,26 @@
 							{#if $page.params.id === doc.id.toString()}
 								<div class="flex w-fit items-center gap-2">
 									<Button
-										class="px-2 h-fit w-fit"
+										class="h-fit w-fit px-2"
 										variant="ghost"
 										aria-label="Edit"
 										on:click={() => ($edit[index] = true)}
 									>
 										<Edit strokeWidth="2" class="h-5 w-5" />
 									</Button>
-									<Button
-										class="px-2 h-fit w-fit"
-										variant="destructive"
-										aria-label="Delete"
-										on:click={async () => await deleteDocument(doc.id)}
-									>
-										<Trash strokeWidth="2" class="h-5 w-5" />
-									</Button>
+									<ButtonDialog docId={doc.id} />
 								</div>
 							{:else if $page.params.id === undefined && index === 0}
 								<div class="flex w-fit items-center gap-2">
 									<Button
-										class="px-2 h-fit w-fit"
+										class="h-fit w-fit px-2"
 										variant="ghost"
 										aria-label="Edit"
 										on:click={() => ($edit[index] = true)}
 									>
 										<Edit strokeWidth="2" class="h-5 w-5" />
 									</Button>
-									<Button
-										class="px-2 h-fit w-fit"
-										variant="destructive"
-										aria-label="Delete"
-										on:click={async () => await deleteDocument(doc.id)}
-									>
-										<Trash strokeWidth="2" class="h-5 w-5" />
-									</Button>
+									<ButtonDialog docId={doc.id} />
 								</div>
 							{/if}
 						{:else}
@@ -84,7 +71,7 @@
 							/>
 							<div class="flex w-fit min-w-max items-center gap-2">
 								<Button
-									class="px-2 h-fit w-fit"
+									class="h-fit w-fit px-2"
 									variant="ghost"
 									aria-label="Save"
 									on:click={async () => await editDocumentName(doc.id, doc.name)}
@@ -92,7 +79,7 @@
 									<Save strokeWidth="2" class="h-5 w-5" />
 								</Button>
 								<Button
-									class="px-2 h-fit w-fit"
+									class="h-fit w-fit px-2"
 									variant="ghost"
 									aria-label="Cancel"
 									on:click={() => ($edit = Array($documents.length).fill(false))}
