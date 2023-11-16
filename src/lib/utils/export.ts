@@ -82,7 +82,7 @@ export function serializeCompletionArray(output: Completion[], pretty = false): 
             return output.map((obj) => JSON.stringify({ messages: obj.messages })).join('\n');
         } else {
             return output.map((obj) => {
-                const formattedText = `<s>[INST] <<SYS>>${obj.messages[0].content}<<</SYS>>${obj.messages[1].content} [/INST] ${obj.messages[2].content}</s>`;
+                const formattedText = `<s>[INST] <<SYS>>${obj.messages[0].content}<</SYS>>${obj.messages[1].content} [/INST] ${obj.messages[2].content}</s>`;
                 return JSON.stringify({ text: formattedText });
             }).join('\n');
         }

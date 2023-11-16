@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { checked, document, getStore, documents, getDocuments, format } from '$lib/stores/documents';
+	import {
+		checked,
+		document,
+		getStore,
+		documents,
+		getDocuments,
+		format
+	} from '$lib/stores/documents';
 	import base16IrBlack from 'svelte-highlight/styles/base16-ir-black';
 	import Table from '$lib/components/Table/Table.svelte';
 	import TableButtons from '$lib/components/Table/TableButtons.svelte';
@@ -15,10 +22,11 @@
 		code = serializeCompletionArray($document.completions, prettify);
 	}
 	$: {
-		if (allChecked) {
+		if (allChecked === true) {
 			$checked = Array($document.completions.length).fill(true);
 		} else {
 			allChecked = false;
+			$checked = Array($document.completions.length).fill(false);
 		}
 	}
 

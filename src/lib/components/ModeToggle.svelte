@@ -4,7 +4,7 @@
 	import Icons from './Icons.svelte';
 </script>
 
-<div class="flex items-center">
+<div class="flex h-fit items-center">
 	<Button
 		on:click={() => setFormat('OpenAI', $document.id)}
 		variant={`${$format === 'OpenAI' ? 'default' : 'outline'}`}

@@ -28,6 +28,7 @@
 			$checked = Array($document.completions.length).fill(true);
 		} else {
 			allChecked = false;
+			$checked = Array($document.completions.length).fill(false);
 		}
 	}
 
