@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { X, Check } from 'lucide-svelte';
+	import { X, Check, BadgeCheck } from 'lucide-svelte';
 	import { type Completion, documents, format, document } from '$lib/stores/documents';
 	import { db } from '$lib/database/database';
 	import { page } from '$app/stores';
@@ -16,15 +16,21 @@
 	let manualOpen = false;
 	let fileOpen = false;
 	let input: HTMLInputElement;
-
+	interface Files extends File {
+		verify?: boolean;
+	}
 	let files: {
-		accepted: File[];
-		rejected: File[];
+		accepted: Files[];
+		rejected: Files[];
 	} = {
 		accepted: [],
 		rejected: []
 	};
 	let verifying = false;
+	const patternLlama =
+		/^\{\"text\"\:\"<s>\[INST\] <<SYS>>([^<>]*?[^<>])<\<\/SYS>\>([^<>]*?[^<>]) \[\/INST\] ([^<>]*?[^<>])<\/s>\"\}$/;
+	const patternOpenAI =
+		/^\{\"messages\"\:\[\{\"role\"\:\"system\",\"content\"\:\"([^"]*)\"\},\{\"role\"\:\"user\",\"content\"\:\"([^"]*)\"\},\{\"role\"\:\"assistant\",\"content\"\:\"([^"]*)\"\}\]\}$/;
 	function handleFilesSelect(e: CustomEvent) {
 		const { acceptedFiles, fileRejections } = e.detail;
 		files.accepted = [...files.accepted, ...acceptedFiles];
@@ -69,6 +75,114 @@
 			$document.completions = [completion];
 		}
 		completion = initCompletion();
+	}
+
+	function verifyDataset() {
+		verifying = true;
+
+		files.accepted.forEach((file, index) => {
+			files.accepted[index].verify = undefined;
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				if (e.target === null) {
+					return;
+				} else if (e.target.result === null) {
+					return;
+				}
+				const fileContent = e.target.result as string;
+				const lines: string[] = fileContent.split('\n');
+				lines.forEach((line, lineNumber) => {
+					if ($format === 'Llama' ? patternLlama.test(line) : patternOpenAI.test(line)) {
+						console.log(line);
+						console.log(`Line ${lineNumber + 1} in ${file.name} is valid.`);
+						files.accepted[index].verify = true;
+					} else {
+						console.log(line);
+						console.log(`Line ${lineNumber + 1} in ${file.name} is not in the expected format.`);
+						files.accepted[index].verify = false;
+					}
+				});
+			};
+			reader.readAsText(file);
+		});
+		verifying = false;
+	}
+
+	async function addFile() {
+		if ($documents.length <= 0) {
+			let uuid = uuidv4();
+			await goto(`/documents/${uuid}`);
+			await db.table('documents').add({
+				id: uuid,
+				name: 'Untitled',
+				completions: [],
+				createdAt: new Date(),
+				format: $format
+			});
+			$documents = [
+				...$documents,
+				{
+					id: uuid,
+					name: 'Untitled',
+					completions: [],
+					createdAt: new Date(),
+					format: $format
+				}
+			];
+		}
+		if (files.accepted.length > 0) {
+			verifyDataset();
+			console.log('Verified file');
+			// completion = initCompletion();
+			files.accepted.map((file, index) => {
+				console.log(completion);
+				files.accepted[index].verify = undefined;
+				const reader = new FileReader();
+				reader.onload = async (e) => {
+					if (e.target === null) {
+						return;
+					} else if (e.target.result === null) {
+						return;
+					}
+					const fileContent = e.target.result as string;
+					const lines: string[] = fileContent.split('\n');
+					for (const line of lines) {
+						// return the values extracted from the regex
+						console.log($format);
+						const match = $format === 'Llama' ? patternLlama.exec(line) : patternOpenAI.exec(line);
+						if (match) {
+							console.log(match[1], match[2], match[3]);
+							completion = {
+								messages: [
+									{ role: 'system', content: match[1] },
+									{ role: 'user', content: match[2] },
+									{ role: 'assistant', content: match[3] }
+								]
+							};
+							console.log('Completion: ', completion);
+							console.log('Completions: ', $document.completions);
+							if ($document.completions.length > 0) {
+								await db.table('documents').update($page.params.id, {
+									completions: [...$document.completions, completion]
+								});
+								$document.completions = [...$document.completions, completion];
+							} else {
+								await db.table('documents').update($page.params.id, {
+									completions: [completion]
+								});
+								$document.completions = [completion];
+							}
+							console.log('Completions: ', $document.completions);
+							console.log('Matches: ', match);
+							console.log('Added Completion');
+						} else {
+							console.log('No match');
+						}
+					}
+				};
+				reader.readAsText(file);
+			});
+		}
 	}
 </script>
 
@@ -126,19 +240,20 @@
 			bind:value={completion.messages[2].content}
 		/>
 	</fieldset>
-	<span>Estimated Tokens: 4096</span>
+	<!-- <span>Estimated Tokens: 4096</span> -->
 {:else if fileOpen}
 	<div class="flex flex-col gap-2">
 		<ModeToggle />
 		{#if files.accepted.length > 0 || files.rejected.length > 0}
 			<div class="flex flex-col gap-2">
-				
-				<Button
-					disabled={verifying === true}
-					variant={verifying ? 'ghost' : 'default'}
-				>
+				{#each files.accepted as file}
+					<p class="flex items-center gap-2 text-white">
+						{file.name}
+					</p>
+				{/each}
+				<!-- <Button disabled={verifying === true} variant={verifying ? 'ghost' : 'default'}>
 					Verify Dataset
-				</Button>
+				</Button> -->
 			</div>
 		{:else}
 			<Dropzone
@@ -157,7 +272,13 @@
 	<DialogButton
 		data-testId="dialog-add"
 		{close}
-		on:click={() => addCompletion()}
+		on:click={async () => {
+			if (manualOpen) {
+				await addCompletion();
+			} else {
+				await addFile();
+			}
+		}}
 		className="inline-flex h-8 items-center justify-center rounded-lg hover:bg-secondary px-4 font-medium leading-none text-white border border-white/20 transition duration-150"
 	>
 		Add
