@@ -12,11 +12,11 @@
 		<Image src="/logo.png" alt="FineTune Helper Logo" width="40" height="36" />
 		<a href="/">FineTune Helper</a>
 	</div>
-	<div class="flex md:hidden">
+	<!-- <div class="flex md:hidden">
 		<button on:click={() => (sheetOpen = true)}>
 			<Menu />
 		</button>
-	</div>
+	</div> -->
 </nav>
 
 <slot />
