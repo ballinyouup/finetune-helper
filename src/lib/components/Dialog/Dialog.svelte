@@ -14,7 +14,7 @@
 	});
 </script>
 
-<Button aria-label="trigger" action={trigger} tooltip={triggerTooltip}>
+<Button aria-label={triggerTooltip} action={trigger} tooltip={triggerTooltip}>
 	<slot name="trigger" />
 </Button>
 <!-- <Button data-testId={testId + '-trigger'} action={trigger}>
@@ -31,6 +31,7 @@
 				start: 0.96
 			}}
 			use:melt={$content}
+			aria-label="dialog-content"
 		>
 			<h2 use:melt={$title} class="m-0 text-lg font-medium text-white">
 				<slot name="title" />

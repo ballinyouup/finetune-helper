@@ -15,7 +15,7 @@
 	});
 </script>
 
-<Button action={trigger} variant="destructive" class="h-fit p-2">
+<Button action={trigger} variant="destructive" class="h-fit p-2" aria-label="delete-dialog-trigger">
 	<Trash strokeWidth="2" class="h-5 w-5" />
 </Button>
 <div use:melt={$portalled}>
@@ -29,6 +29,7 @@
 				start: 0.96
 			}}
 			use:melt={$content}
+			aria-label="delete-dialog-content"
 		>
 			<h2 use:melt={$title} class="m-0 text-lg font-medium text-white">Delete Document</h2>
 			<p use:melt={$description} class="mb-5 mt-2 leading-normal text-muted-foreground">
@@ -38,13 +39,12 @@
 				action={close}
 				class="h-fit w-fit px-2"
 				variant="destructive"
-				aria-label="Delete"
+				aria-label="delete-document"
 				on:click={async () => await deleteDocument(docId)}
 			>
 				Delete
 			</Button>
 			<DialogButton
-				data-testId="dialog-close"
 				{close}
 				ariaLabel="close"
 				className="absolute right-4 top-4 inline-flex

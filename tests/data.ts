@@ -34,6 +34,6 @@ export const expectedOpenAIJSONL = [{
     ],
 }];
 
-export const expectedLlamaCSV = [{ text: "<s>[INST] <<SYS>>Entering system data<<</SYS>>Entering user data [/INST] Entering assistant data</s>" }];
+export const expectedLlamaCSV = [{ text: "<s>[INST] <<SYS>>Entering system data<</SYS>>Entering user data [/INST] Entering assistant data</s>" }];
 
-export const expectedLlamaJSONL = [{ text: "<s>[INST] <<SYS>>Entering system data<<</SYS>>Entering user data [/INST] Entering assistant data</s>" }];
+export const expectedLlamaJSONL = [{ text: "<s>[INST] <<SYS>>Entering system data<</SYS>>Entering user data [/INST] Entering assistant data</s>" }];

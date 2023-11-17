@@ -13,7 +13,7 @@
 	import DialogButton from './Dialog/DialogButton.svelte';
 	export let close: ReturnType<typeof createDialog>['elements']['close'];
 	let completion: Completion = initCompletion() as Completion;
-	let manualOpen = false;
+	let manualOpen = true;
 	let fileOpen = false;
 	let input: HTMLInputElement;
 	interface Files extends File {
@@ -191,6 +191,7 @@
 <div class="mb-2 flex gap-2">
 	<Button
 		class="w-fit"
+		disabled={fileOpen}
 		on:click={() => {
 			manualOpen = false;
 			fileOpen = !fileOpen;
@@ -200,6 +201,7 @@
 	</Button>
 	<Button
 		class="w-fit"
+		disabled={manualOpen}
 		on:click={() => {
 			fileOpen = false;
 			manualOpen = !manualOpen;
@@ -270,7 +272,7 @@
 
 <div class="mt-6 flex justify-end gap-2">
 	<DialogButton
-		data-testId="dialog-add"
+		ariaLabel="dialog-add"
 		{close}
 		on:click={async () => {
 			if (manualOpen) {
@@ -284,7 +286,7 @@
 		Add
 	</DialogButton>
 	<DialogButton
-		data-testId="dialog-cancel"
+		ariaLabel="dialog-cancel"
 		{close}
 		className="w-fit inline-flex h-8 items-center justify-center rounded-lg hover:bg-secondary px-4 font-medium leading-none text-white transition duration-150 border border-white/20"
 	>

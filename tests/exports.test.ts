@@ -19,7 +19,7 @@ test("Exports - OpenAI", async ({ page }) => {
     await fillTextAreas(page, models.OpenAI);
     await testAddButton(page);
     await checkTableData(page, models.OpenAI);
-    await page.getByLabel("export", { exact: true }).click();
+    await page.getByLabel("Export", { exact: true }).click();
     await page.getByLabel("format-openai").click();
     /** ------- Test OPENAI CSV ----------*/
     const [downloadCSV] = await Promise.all([
@@ -32,7 +32,7 @@ test("Exports - OpenAI", async ({ page }) => {
         skip_empty_lines: true
     });
     expect(records).toEqual(expectedOpenAICSV);
-    await page.getByLabel("export", { exact: true }).click();
+    await page.getByLabel("Export", { exact: true }).click();
     /** ------- Test OPENAI JSON ----------*/
     const [download] = await Promise.all([
         page.waitForEvent('download'),
@@ -43,7 +43,7 @@ test("Exports - OpenAI", async ({ page }) => {
     const recordsJSONL = fileContent.split('\n').map((line) => JSON.parse(line));
     expect(recordsJSONL).toEqual(expectedOpenAIJSONL);
     /** -------- Test LLama --------- */
-    await page.getByLabel("export", { exact: true }).click();
+    await page.getByLabel("Export", { exact: true }).click();
     await page.getByLabel("format-llama").click();
     /** ------- Test LLAMA CSV ----------*/
     const [downloadLlamaCSV] = await Promise.all([
@@ -56,7 +56,7 @@ test("Exports - OpenAI", async ({ page }) => {
         skip_empty_lines: true
     });
     expect(recordsLlama).toEqual(expectedLlamaCSV);
-    await page.getByLabel("export", { exact: true }).click();
+    await page.getByLabel("Export", { exact: true }).click();
     /** ------- Test LLAMA JSON ----------*/
     const [downloadLlama] = await Promise.all([
         page.waitForEvent('download'),
