@@ -21,13 +21,12 @@
 	};
 	export let tooltip: string = '';
 	const {
-		elements: { trigger, content, arrow },
+		elements: { trigger, content },
 		states: { open }
 	} = createTooltip({
 		openDelay: 0,
 		closeDelay: 0,
-		group: true,
-		forceVisible: true
+		group: true
 	});
 	const dispatch = createEventDispatcher();
 	const buttonVariants = cva(
@@ -62,7 +61,8 @@
 		{...$$restProps}
 		use:melt={$action}
 		use:melt={$trigger}
-		use:melt={$content}
+		on:mouseleave={() => ($open = false)}
+		on:pointerleave={() => ($open = false)}
 		on:click={() => {
 			dispatch('click');
 		}}
@@ -70,6 +70,7 @@
 	>
 		{#if $open && tooltip !== ''}
 			<div
+				use:melt={$content}
 				transition:fade={{ duration: 100 }}
 				class="absolute -bottom-10 !z-20 h-fit rounded-lg bg-white shadow"
 			>
@@ -84,7 +85,8 @@
 	<button
 		{...$$restProps}
 		use:melt={$trigger}
-		use:melt={$content}
+		on:mouseleave={() => ($open = false)}
+		on:pointerleave={() => ($open = false)}
 		on:click={() => {
 			dispatch('click');
 		}}
@@ -92,6 +94,7 @@
 	>
 		{#if $open && tooltip !== ''}
 			<div
+				use:melt={$content}
 				transition:fade={{ duration: 100 }}
 				class="absolute -bottom-10 !z-20 h-fit rounded-lg bg-white shadow"
 			>
