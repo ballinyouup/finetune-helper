@@ -7,7 +7,7 @@
 	import AddDialog from '../AddDialog.svelte';
 	import ModeToggle from '../ModeToggle.svelte';
 	import { exportCSV, exportJSONL } from '$lib/utils/export';
-	import Dropzone from 'svelte-file-dropzone/Dropzone.svelte';
+	import Dropzone from 'svelte-file-dropzone';
 	import Spinner from '../Spinner.svelte';
 	export let tabOpen: boolean;
 	export let allChecked: boolean;

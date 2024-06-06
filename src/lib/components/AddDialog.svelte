@@ -6,7 +6,7 @@
 	import { goto } from '$app/navigation';
 	import { v4 as uuidv4 } from 'uuid';
 	import Button from './Button.svelte';
-	import Dropzone from 'svelte-file-dropzone/Dropzone.svelte';
+	import Dropzone from 'svelte-file-dropzone';
 	import { Folder, Edit } from 'lucide-svelte';
 	import ModeToggle from './ModeToggle.svelte';
 	import type { createDialog } from '@melt-ui/svelte';
