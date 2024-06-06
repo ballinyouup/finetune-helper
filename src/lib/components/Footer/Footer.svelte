@@ -19,10 +19,13 @@
 			<FooterSection>
 				<h6 class="text-white">FineTune Helper</h6>
 				<div class="-ml-2 grid w-fit grid-cols-1 space-y-0 md:grid-cols-2">
-					<FooterSocial href="https://instagram.com/protection4allinsurance" name="Twitter">
+					<FooterSocial href="https://twitter.com/bryanhuici" name="Twitter">
 						<Icons icon="twitter" />
 					</FooterSocial>
-					<FooterSocial href="https://instagram.com/protection4allinsurance" name="Email">
+					<FooterSocial href="https://github.com/ballinyouup/finetune-helper" name="Github">
+						<Icons icon="github" />
+					</FooterSocial>
+					<FooterSocial href="mailto:bryanhuici@gmail.com" name="Email">
 						<Icons fill="transparent" icon="email" />
 					</FooterSocial>
 				</div>
