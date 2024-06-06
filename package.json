@@ -12,9 +12,7 @@
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
 		"test:integration": "playwright test",
-		"test:unit": "vitest",
-		"sst:deploy": "sst deploy",
-		"sst:dev": "sst dev"
+		"test:unit": "vitest"
 	},
 	"devDependencies": {
 		"@melt-ui/pp": "^0.1.2",
@@ -27,8 +25,6 @@
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"autoprefixer": "^10.4.16",
-		"aws-cdk-lib": "2.101.1",
-		"constructs": "10.2.69",
 		"eslint": "^8.28.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-svelte": "^2.30.0",
@@ -36,7 +32,6 @@
 		"prettier": "^3.0.3",
 		"prettier-plugin-svelte": "^3.0.3",
 		"prettier-plugin-tailwindcss": "^0.5.6",
-		"sst": "^2.32.2",
 		"svelte": "^4.2.3",
 		"svelte-check": "^3.4.3",
 		"svelte-highlight": "^7.4.1",
