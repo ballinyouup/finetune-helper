@@ -1,7 +1,7 @@
 <script lang="ts">
 	import '../../app.css';
 	let sheetOpen = false;
-	import { Menu } from 'lucide-svelte';
+	// import { Menu } from 'lucide-svelte';
 	import Footer from '$lib/components/Footer/Footer.svelte';
 	import { Image } from '@unpic/svelte';
 	import { dev } from '$app/environment';
